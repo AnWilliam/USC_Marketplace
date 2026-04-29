@@ -23,11 +23,15 @@ public final class DBUtil {
     private DBUtil() {
     }
 
+    private static String trimOrEmpty(String value) {
+        return value == null ? "" : value.trim();
+    }
+
     public static Connection getConnection() throws SQLException {
         String driver = PROPERTIES.getProperty("db.driver", "com.mysql.cj.jdbc.Driver");
         String url = PROPERTIES.getProperty("db.url", "jdbc:mysql://localhost:3306/usc_marketplace");
-        String username = PROPERTIES.getProperty("db.username", "root");
-        String password = PROPERTIES.getProperty("db.password", "");
+        String username = trimOrEmpty(PROPERTIES.getProperty("db.username", "root"));
+        String password = trimOrEmpty(PROPERTIES.getProperty("db.password", ""));
 
         try {
             Class.forName(driver);

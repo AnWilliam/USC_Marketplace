@@ -9,19 +9,23 @@ public class Item {
     private int categoryID;
     private String title;
     private String description;
+    private String itemCondition;
     private BigDecimal price;
     private String status;
     private LocalDateTime dateListed;
+    private String sellerName;
+    private String categoryName;
 
     public Item() {
     }
 
-    public Item(int itemID, int sellerID, int categoryID, String title, String description, BigDecimal price, String status, LocalDateTime dateListed) {
+    public Item(int itemID, int sellerID, int categoryID, String title, String description, String itemCondition, BigDecimal price, String status, LocalDateTime dateListed) {
         this.itemID = itemID;
         this.sellerID = sellerID;
         this.categoryID = categoryID;
         this.title = title;
         this.description = description;
+        this.itemCondition = itemCondition;
         this.price = price;
         this.status = status;
         this.dateListed = dateListed;
@@ -67,6 +71,14 @@ public class Item {
         this.description = description;
     }
 
+    public String getItemCondition() {
+        return itemCondition;
+    }
+
+    public void setItemCondition(String itemCondition) {
+        this.itemCondition = itemCondition;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -89,5 +101,21 @@ public class Item {
 
     public void setDateListed(LocalDateTime dateListed) {
         this.dateListed = dateListed;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

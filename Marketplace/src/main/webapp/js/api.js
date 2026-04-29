@@ -4,20 +4,20 @@ function apiGet(url) {
     });
 }
 
-function apiPost(url, formData) {
-    var body = formData;
-    if (formData instanceof FormData) {
-        body = new URLSearchParams();
-        formData.forEach(function(value, key) {
-            body.append(key, value);
-        });
-    }
-
-    return fetch(url, {
+function apiPost(url, body) {
+    var opts = {
         method: 'POST',
-        body: body,
         credentials: 'include'
-    }).then(function(response) {
+    };
+    if (body instanceof FormData) {
+        opts.body = body;
+    } else if (body instanceof URLSearchParams) {
+        opts.headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' };
+        opts.body = body;
+    } else {
+        opts.body = body;
+    }
+    return fetch(url, opts).then(function(response) {
         return response.json();
     });
 }

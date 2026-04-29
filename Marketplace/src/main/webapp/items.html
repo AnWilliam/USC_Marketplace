@@ -3,34 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Items | USC Marketplace</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Browse | USC Marketplace</title>
+    <link rel="stylesheet" href="css/marketplace.css">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="index.html">USC Marketplace</a>
-        <nav><a href="sell.html">Sell</a><a href="conversations.html">Messages</a><a href="profile.html">Profile</a></nav>
-    </header>
-    <main class="page-shell">
-        <section class="toolbar">
-            <h1>Available items</h1>
-            <form id="searchForm" class="search-row">
-                <input type="search" name="q" placeholder="Search items">
-                <select name="categoryID">
-                    <option value="">All categories</option>
-                    <option value="1">Textbooks</option>
-                    <option value="2">Electronics</option>
-                    <option value="3">Furniture</option>
-                    <option value="4">Clothing</option>
-                    <option value="5">Other</option>
+<body class="market-body">
+    <div id="listings-page">
+        <nav class="market-nav">
+            <a class="market-brand" href="index.html">
+                <span class="market-brand-mark">USC</span>
+                <span>Marketplace</span>
+            </a>
+            <div class="market-nav-actions">
+                <a class="nav-muted" href="conversations.html">Messages</a>
+                <button type="button" id="btnCreateListing" class="btn-create" aria-label="Create new listing">+ Create New Listing</button>
+                <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+            </div>
+        </nav>
+
+        <div class="market-layout">
+            <aside class="market-sidebar">
+                <input type="search" id="sidebarSearch" class="sidebar-search" placeholder="Search listings…" autocomplete="off">
+                <button type="button" class="filter-link" id="searchFiltersLink">Search Filters</button>
+                <h2>Categories</h2>
+                <nav class="cat-links" id="categoryLinks"></nav>
+                <h2>Price</h2>
+                <div class="price-filter">
+                    <label>Above:
+                        <input type="number" id="priceAbove" min="0" step="0.01" placeholder="Min">
+                    </label>
+                    <label>Below:
+                        <input type="number" id="priceBelow" min="0" step="0.01" placeholder="Max">
+                    </label>
+                </div>
+            </aside>
+
+            <div class="market-main">
+                <div class="pill-rows">
+                    <p class="pill-row-label">Sort by</p>
+                    <div class="pill-row" id="sortPills"></div>
+                    <p class="pill-row-label">Filter tags</p>
+                    <div class="pill-row" id="filterPills"></div>
+                </div>
+                <section id="itemsGrid" class="items-grid"></section>
+                <div id="marketplaceResult" class="result-banner" role="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-listing-page" class="add-page page-hidden">
+        <nav class="market-nav">
+            <a class="market-brand" href="index.html">
+                <span class="market-brand-mark">USC</span>
+                <span>Marketplace</span>
+            </a>
+            <div class="market-nav-actions">
+                <a class="nav-muted" href="items.html">Browse</a>
+                <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+            </div>
+        </nav>
+
+        <button type="button" class="back-link" id="btnBackToListings">&larr; Back to Listings</button>
+        <h1>Create New Listing</h1>
+
+        <form id="listingForm" class="form-stack">
+            <label>Item Name
+                <input type="text" name="title" required maxlength="150" autocomplete="off">
+            </label>
+            <label>Price
+                <span class="price-prefix-wrap">
+                    <span>$</span>
+                    <input type="number" name="price" min="0.01" step="0.01" required placeholder="0.00">
+                </span>
+            </label>
+            <label>Category
+                <select name="categoryID" id="categorySelect" required>
+                    <option value="">Loading categories…</option>
                 </select>
-                <button type="submit" class="button">Search</button>
-            </form>
-        </section>
-        <section id="itemsList" class="item-grid"></section>
-        <p id="result" class="result"></p>
-    </main>
+            </label>
+            <label>Description
+                <textarea name="description" rows="4" placeholder="Describe your item"></textarea>
+            </label>
+
+            <label>Upload Photo</label>
+            <div class="photo-drop" id="photoDrop">
+                <input type="file" id="photoInput" accept="image/*">
+                <p class="photo-drop-hint">Click to upload or drag photo here</p>
+                <p class="photo-drop-hint" style="font-size: 0.75rem;">Preview only — listing saves title, price, category, description, and condition.</p>
+            </div>
+            <img id="photoPreview" class="photo-preview" alt="Photo preview">
+
+            <fieldset style="border: none; padding: 0; margin: 0;">
+                <legend style="font-weight: 600; margin-bottom: 0.35rem;">Condition</legend>
+                <div class="cond-options">
+                    <label><input type="radio" name="itemCondition" value="New"> New</label>
+                    <label><input type="radio" name="itemCondition" value="Like New"> Like New</label>
+                    <label><input type="radio" name="itemCondition" value="Good"> Good</label>
+                    <label><input type="radio" name="itemCondition" value="Fair"> Fair</label>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-post">Post Listing</button>
+            <div id="listingFormMsg" class="result-banner"></div>
+        </form>
+    </div>
+
     <script src="js/api.js"></script>
-    <script src="js/items.js"></script>
+    <script src="js/marketplace.js"></script>
 </body>
 </html>

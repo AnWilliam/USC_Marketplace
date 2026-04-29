@@ -13,16 +13,24 @@ import model.Item;
 import util.DBUtil;
 
 public class ItemDAO {
+    private static final String ITEM_SELECT_BASE = ""
+        + "SELECT i.itemID, i.sellerID, i.categoryID, i.title, i.description, i.item_condition, i.price, i.status, i.date_listed, "
+        + "u.name AS sellerName, c.categoryName AS categoryName "
+        + "FROM Items i "
+        + "JOIN Users u ON i.sellerID = u.userID "
+        + "JOIN Categories c ON i.categoryID = c.categoryID ";
+
     public int create(Item item) throws SQLException {
-        String sql = "INSERT INTO Items (sellerID, categoryID, title, description, price, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Items (sellerID, categoryID, title, description, item_condition, price, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, item.getSellerID());
             stmt.setInt(2, item.getCategoryID());
             stmt.setString(3, item.getTitle());
             stmt.setString(4, item.getDescription());
-            stmt.setBigDecimal(5, item.getPrice());
-            stmt.setString(6, item.getStatus());
+            stmt.setString(5, item.getItemCondition());
+            stmt.setBigDecimal(6, item.getPrice());
+            stmt.setString(7, item.getStatus());
             stmt.executeUpdate();
             try (ResultSet keys = stmt.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -34,7 +42,7 @@ public class ItemDAO {
     }
 
     public Item findById(int itemID) throws SQLException {
-        String sql = "SELECT * FROM Items WHERE itemID = ?";
+        String sql = ITEM_SELECT_BASE + "WHERE i.itemID = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, itemID);
@@ -45,7 +53,7 @@ public class ItemDAO {
     }
 
     public List<Item> findAvailableItems() throws SQLException {
-        String sql = "SELECT * FROM Items WHERE status = 'AVAILABLE' ORDER BY date_listed DESC";
+        String sql = ITEM_SELECT_BASE + "WHERE i.status = 'AVAILABLE' ORDER BY i.date_listed DESC";
         List<Item> items = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -58,20 +66,20 @@ public class ItemDAO {
     }
 
     public List<Item> search(String keyword, Integer categoryID) throws SQLException {
-        StringBuilder sql = new StringBuilder("SELECT * FROM Items WHERE status = 'AVAILABLE'");
+        StringBuilder sql = new StringBuilder(ITEM_SELECT_BASE).append("WHERE i.status = 'AVAILABLE'");
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" AND (title LIKE ? OR description LIKE ?)");
+            sql.append(" AND (i.title LIKE ? OR i.description LIKE ?)");
             String pattern = "%" + keyword.trim() + "%";
             params.add(pattern);
             params.add(pattern);
         }
         if (categoryID != null) {
-            sql.append(" AND categoryID = ?");
+            sql.append(" AND i.categoryID = ?");
             params.add(categoryID);
         }
-        sql.append(" ORDER BY date_listed DESC");
+        sql.append(" ORDER BY i.date_listed DESC");
 
         List<Item> items = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
@@ -101,15 +109,19 @@ public class ItemDAO {
 
     private Item mapItem(ResultSet rs) throws SQLException {
         Timestamp listed = rs.getTimestamp("date_listed");
-        return new Item(
+        Item item = new Item(
             rs.getInt("itemID"),
             rs.getInt("sellerID"),
             rs.getInt("categoryID"),
             rs.getString("title"),
             rs.getString("description"),
+            rs.getString("item_condition"),
             rs.getBigDecimal("price"),
             rs.getString("status"),
             listed == null ? null : listed.toLocalDateTime()
         );
+        item.setSellerName(rs.getString("sellerName"));
+        item.setCategoryName(rs.getString("categoryName"));
+        return item;
     }
 }

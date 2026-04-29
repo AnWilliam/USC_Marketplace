@@ -5,4 +5,9 @@ INSERT IGNORE INTO Categories (categoryName, description) VALUES
 ('Electronics', 'Laptops, chargers, calculators, and accessories'),
 ('Furniture', 'Dorm and apartment furniture'),
 ('Clothing', 'Clothes, shoes, and USC gear'),
-('Other', 'Everything else');
+('Other', 'Everything else'),
+('Accessories', 'Bags, jewelry, tech accessories'),
+('Sports', 'Athletic gear and equipment'),
+('Hobby', 'Games, crafts, and collectibles'),
+('School Supplies', 'Notebooks, pens, desk organizers'),
+('Entertainment', 'Movies, music, tickets, and media');

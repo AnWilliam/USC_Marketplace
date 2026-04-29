@@ -4,35 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USC Marketplace</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/marketplace.css">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="index.html">USC Marketplace</a>
-        <nav>
-            <a href="items.html">Browse</a>
-            <a href="sell.html">Sell</a>
-            <a href="conversations.html">Messages</a>
-            <a href="profile.html">Profile</a>
-            <a href="login.html">Login</a>
-        </nav>
-    </header>
+<body class="market-body landing-body">
+    <nav class="market-nav">
+        <a class="market-brand" href="index.html">
+            <span class="market-brand-mark">USC</span>
+            <span>Marketplace</span>
+        </a>
+        <div class="market-nav-actions">
+            <a class="nav-muted" href="login.html">Login</a>
+            <a class="btn-create" href="items.html">Browse listings</a>
+            <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+        </div>
+    </nav>
 
-    <main class="page-shell">
-        <section class="hero">
+    <main class="landing-main">
+        <section class="landing-hero">
             <h1>Buy and sell with USC students.</h1>
-            <p>A local marketplace for textbooks, furniture, electronics, clothing, and campus essentials.</p>
-            <div class="actions">
-                <a class="button primary" href="items.html">Browse items</a>
-                <a class="button" href="register.html">Create account</a>
+            <p class="landing-lede">Textbooks, electronics, dorm essentials, apparel, and more — peer-to-peer on campus.</p>
+            <div class="landing-actions">
+                <a class="btn-create landing-cta" href="items.html">Browse marketplace</a>
+                <a class="landing-secondary" href="items.html#create">+ Create New Listing</a>
+                <a class="landing-secondary" href="register.html">Create account</a>
             </div>
         </section>
 
-        <section class="quick-grid">
-            <a href="items.html?q=textbook">Textbooks</a>
-            <a href="items.html?q=calculator">Electronics</a>
-            <a href="items.html?q=desk">Furniture</a>
-            <a href="sell.html">List an item</a>
+        <section class="landing-grid">
+            <a class="landing-tile" href="items.html?q=textbook">Textbooks</a>
+            <a class="landing-tile" href="items.html?q=laptop">Electronics</a>
+            <a class="landing-tile" href="items.html?q=desk">Furniture</a>
+            <a class="landing-tile" href="items.html#create">List an item</a>
+        </section>
+
+        <section class="landing-note">
+            <p>Listings load from the USC Marketplace server. Sign in to post items.</p>
         </section>
     </main>
 </body>

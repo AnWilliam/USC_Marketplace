@@ -44,6 +44,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>CategoryServlet</servlet-name>
+        <servlet-class>servlet.CategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryServlet</servlet-name>
+        <url-pattern>/categories</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>ConversationServlet</servlet-name>
         <servlet-class>servlet.ConversationServlet</servlet-class>
     </servlet>

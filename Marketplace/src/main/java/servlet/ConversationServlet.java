@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import service.ConversationService;
 import util.JsonUtil;
 import util.SessionUtil;
 
+@MultipartConfig
 public class ConversationServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

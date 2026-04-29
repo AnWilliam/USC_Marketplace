@@ -22,7 +22,7 @@ public class ItemService {
         this.categoryDAO = categoryDAO;
     }
 
-    public Item createItem(int sellerID, int categoryID, String title, String description, BigDecimal price) throws SQLException {
+    public Item createItem(int sellerID, int categoryID, String title, String description, BigDecimal price, String itemCondition) throws SQLException {
         if (ValidationUtil.isBlank(title)) {
             throw new IllegalArgumentException("Title is required.");
         }
@@ -38,6 +38,7 @@ public class ItemService {
         item.setCategoryID(categoryID);
         item.setTitle(title.trim());
         item.setDescription(description);
+        item.setItemCondition(itemCondition != null && !itemCondition.trim().isEmpty() ? itemCondition.trim() : null);
         item.setPrice(price);
         item.setStatus("AVAILABLE");
         int itemID = itemDAO.create(item);

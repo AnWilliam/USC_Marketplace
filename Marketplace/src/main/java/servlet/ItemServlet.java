@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import service.ItemService;
 import util.JsonUtil;
 import util.SessionUtil;
 
+@MultipartConfig(maxFileSize = 10485760L, maxRequestSize = 12582912L)
 public class ItemServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -60,9 +62,10 @@ public class ItemServlet extends HttpServlet {
             int categoryID = Integer.parseInt(request.getParameter("categoryID"));
             String title = request.getParameter("title");
             String description = request.getParameter("description");
+            String itemCondition = request.getParameter("itemCondition");
             BigDecimal price = new BigDecimal(request.getParameter("price"));
 
-            Item item = itemService.createItem(userID, categoryID, title, description, price);
+            Item item = itemService.createItem(userID, categoryID, title, description, price, itemCondition);
             JsonUtil.writeJson(response, HttpServletResponse.SC_CREATED,
                 "{\"success\":true,\"message\":\"Item created.\",\"data\":" + JsonUtil.itemToJson(item) + "}");
         } catch (IllegalArgumentException e) {

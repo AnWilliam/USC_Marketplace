@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Items (
     categoryID INT NOT NULL,
     title VARCHAR(150) NOT NULL,
     description TEXT,
+    item_condition VARCHAR(32) NULL,
     price DECIMAL(10, 2) NOT NULL,
     status ENUM('AVAILABLE', 'SOLD', 'PENDING') NOT NULL DEFAULT 'AVAILABLE',
     date_listed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

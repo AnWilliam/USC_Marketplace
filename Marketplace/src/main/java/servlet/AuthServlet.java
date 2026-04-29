@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import service.UserService;
 import util.JsonUtil;
 import util.SessionUtil;
 
+@MultipartConfig
 public class AuthServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

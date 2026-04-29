@@ -82,9 +82,12 @@ public final class JsonUtil {
             + "\"categoryID\":" + item.getCategoryID() + ","
             + "\"title\":" + quote(item.getTitle()) + ","
             + "\"description\":" + quote(item.getDescription()) + ","
+            + "\"itemCondition\":" + quote(item.getItemCondition()) + ","
             + "\"price\":" + money(item.getPrice()) + ","
             + "\"status\":" + quote(item.getStatus()) + ","
-            + "\"dateListed\":" + date(item.getDateListed())
+            + "\"dateListed\":" + date(item.getDateListed()) + ","
+            + "\"sellerName\":" + quote(item.getSellerName()) + ","
+            + "\"categoryName\":" + quote(item.getCategoryName())
             + "}";
     }
 
