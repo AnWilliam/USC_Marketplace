@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell | USC Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="index.html">USC Marketplace</a>
+        <nav><a href="items.html">Browse</a><a href="profile.html">Profile</a></nav>
+    </header>
+    <main class="form-page">
+        <form id="itemForm" class="panel" enctype="multipart/form-data">
+            <h1>List an item</h1>
+            <label>Title <input type="text" name="title" required></label>
+            <label>Description <textarea name="description" rows="5"></textarea></label>
+            <label>Price <input type="number" name="price" min="0.01" step="0.01" required></label>
+            <label>Category
+                <select name="categoryID" required>
+                    <option value="1">Textbooks</option>
+                    <option value="2">Electronics</option>
+                    <option value="3">Furniture</option>
+                    <option value="4">Clothing</option>
+                    <option value="5">Other</option>
+                </select>
+            </label>
+            <label>Photos
+                <input id="imageInput" type="file" name="images" accept="image/*" multiple>
+                <span class="summary">Upload up to 6 images.</span>
+            </label>
+            <div id="imagePreview" class="image-preview"></div>
+            <button type="submit" class="button primary">Publish</button>
+            <p id="result" class="result"></p>
+        </form>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/items.js"></script>
+</body>
+</html>

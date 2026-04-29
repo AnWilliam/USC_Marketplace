@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items | USC Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="index.html">USC Marketplace</a>
+        <nav><a href="sell.html">Sell</a><a href="conversations.html">Messages</a><a href="profile.html">Profile</a></nav>
+    </header>
+    <main class="page-shell">
+        <section class="toolbar">
+            <h1>Available items</h1>
+            <form id="searchForm" class="search-row">
+                <input type="search" name="q" placeholder="Search items">
+                <select name="categoryID">
+                    <option value="">All categories</option>
+                    <option value="1">Textbooks</option>
+                    <option value="2">Electronics</option>
+                    <option value="3">Furniture</option>
+                    <option value="4">Clothing</option>
+                    <option value="5">Other</option>
+                </select>
+                <button type="submit" class="button">Search</button>
+            </form>
+        </section>
+        <section id="itemsList" class="item-grid"></section>
+        <p id="result" class="result"></p>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/items.js"></script>
+</body>
+</html>
