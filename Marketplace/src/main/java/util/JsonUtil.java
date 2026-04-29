@@ -10,6 +10,7 @@ import model.Conversation;
 import model.Item;
 import model.Message;
 import model.User;
+import dto.ConversationSummary;
 
 public final class JsonUtil {
     private JsonUtil() {
@@ -112,6 +113,23 @@ public final class JsonUtil {
             + "\"lastMessageAt\":" + date(conversation.getLastMessageAt())
             + "}";
     }
+
+    public static String conversationSummaryToJson(ConversationSummary summary) {
+    if (summary == null) {
+        return "null";
+    }
+
+    return "{"
+        + "\"conversationID\":" + summary.getConversationID() + ","
+        + "\"itemID\":" + summary.getItemID() + ","
+        + "\"itemTitle\":" + quote(summary.getItemTitle()) + ","
+        + "\"otherUserID\":" + summary.getOtherUserID() + ","
+        + "\"otherUserName\":" + quote(summary.getOtherUserName()) + ","
+        + "\"lastMessage\":" + quote(summary.getLastMessage()) + ","
+        + "\"lastMessageAt\":" + date(summary.getLastMessageAt()) + ","
+        + "\"unreadCount\":" + summary.getUnreadCount()
+        + "}";
+}
 
     public static String messageToJson(Message message) {
         if (message == null) {

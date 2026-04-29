@@ -1,12 +1,13 @@
 package service;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import dao.ConversationDAO;
 import dao.ItemDAO;
+import dto.ConversationSummary;
+import java.sql.SQLException;
+import java.util.List;
 import model.Conversation;
 import model.Item;
+
 
 public class ConversationService {
     private final ConversationDAO conversationDAO;
@@ -47,6 +48,11 @@ public class ConversationService {
         return conversationDAO.findByUser(userID);
     }
 
+    public List<ConversationSummary> getConversationSummariesForUser(int userID) throws SQLException {
+        return conversationDAO.findSummariesByUser(userID);
+    }
+    
+
     public Conversation getConversation(int conversationID, int userID) throws SQLException {
         Conversation conversation = conversationDAO.findById(conversationID);
         if (conversation == null) {
@@ -57,4 +63,8 @@ public class ConversationService {
         }
         return conversation;
     }
+
+    
+
+
 }

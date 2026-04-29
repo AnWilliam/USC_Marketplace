@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import dto.ConversationSummary;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ public class ConversationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
         int userID = SessionUtil.requireLogin(request, response);
         if (userID == -1) {
             return;
@@ -28,13 +30,22 @@ public class ConversationServlet extends HttpServlet {
 
         try {
             int itemID = Integer.parseInt(request.getParameter("itemID"));
+
             Conversation conversation = conversationService.startConversation(itemID, userID);
+
             JsonUtil.writeJson(response, HttpServletResponse.SC_CREATED,
-                "{\"success\":true,\"message\":\"Conversation ready.\",\"data\":" + JsonUtil.conversationToJson(conversation) + "}");
+                "{\"success\":true,\"message\":\"Conversation ready.\",\"data\":"
+                    + JsonUtil.conversationToJson(conversation) + "}");
+
+        } catch (NumberFormatException e) {
+            JsonUtil.writeError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid item ID.");
+
         } catch (IllegalArgumentException e) {
             JsonUtil.writeError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+
         } catch (SQLException e) {
-            JsonUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
+            JsonUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                "Database error: " + e.getMessage());
         }
     }
 
@@ -46,24 +57,32 @@ public class ConversationServlet extends HttpServlet {
         }
 
         try {
-            List<Conversation> conversations = conversationService.getConversationsForUser(userID);
+            List<ConversationSummary> conversations =
+                conversationService.getConversationSummariesForUser(userID);
+
             JsonUtil.writeJson(response, HttpServletResponse.SC_OK,
-                "{\"success\":true,\"data\":" + conversationsToJson(conversations) + "}");
+                "{\"success\":true,\"data\":" + conversationSummariesToJson(conversations) + "}");
+
         } catch (IllegalArgumentException e) {
             JsonUtil.writeError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+
         } catch (SQLException e) {
-            JsonUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
+            JsonUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                "Database error: " + e.getMessage());
         }
     }
 
-    private String conversationsToJson(List<Conversation> conversations) {
+    private String conversationSummariesToJson(List<ConversationSummary> conversations) {
         StringBuilder json = new StringBuilder("[");
+
         for (int i = 0; i < conversations.size(); i++) {
             if (i > 0) {
                 json.append(',');
             }
-            json.append(JsonUtil.conversationToJson(conversations.get(i)));
+
+            json.append(JsonUtil.conversationSummaryToJson(conversations.get(i)));
         }
+
         json.append(']');
         return json.toString();
     }
