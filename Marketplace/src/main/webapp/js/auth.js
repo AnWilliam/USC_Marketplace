@@ -1,6 +1,6 @@
 var registerForm = document.getElementById('registerForm');
 if (registerForm) {
-    console.log('USC Marketplace auth.js register-v3 loaded');
+    console.log('USC Marketplace auth.js v4 loaded');
     registerForm.addEventListener('submit', function(event) {
         event.preventDefault();
         registerForm.name.value = registerForm.name.value.trim();

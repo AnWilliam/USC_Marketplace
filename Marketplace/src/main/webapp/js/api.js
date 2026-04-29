@@ -7,19 +7,10 @@ function apiGet(url) {
 function apiPost(url, formData) {
     var body = formData;
     if (formData instanceof FormData) {
-        var hasFile = false;
-        formData.forEach(function(value) {
-            if (value instanceof File && value.size > 0) {
-                hasFile = true;
-            }
+        body = new URLSearchParams();
+        formData.forEach(function(value, key) {
+            body.append(key, value);
         });
-
-        if (!hasFile) {
-            body = new URLSearchParams();
-            formData.forEach(function(value, key) {
-                body.append(key, value);
-            });
-        }
     }
 
     return fetch(url, {

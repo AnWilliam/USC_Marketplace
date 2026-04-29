@@ -2,8 +2,6 @@ var itemsList = document.getElementById('itemsList');
 var itemDetail = document.getElementById('itemDetail');
 var itemForm = document.getElementById('itemForm');
 var searchForm = document.getElementById('searchForm');
-var imageInput = document.getElementById('imageInput');
-var imagePreview = document.getElementById('imagePreview');
 
 function loadItems(url) {
     if (!itemsList) {
@@ -20,13 +18,8 @@ function loadItems(url) {
 }
 
 function renderItemCard(item) {
-    var imageHtml = '';
-    if (item.imageUrls && item.imageUrls.length > 0) {
-        imageHtml = '<img class="item-thumb" src="' + escapeHtml(item.imageUrls[0]) + '" alt="' + escapeHtml(item.title) + '">';
-    }
     return ''
         + '<article class="item-card">'
-        + imageHtml
         + '<h2>' + escapeHtml(item.title) + '</h2>'
         + '<p class="price">' + money(item.price) + '</p>'
         + '<p>' + escapeHtml(item.description || '') + '</p>'
@@ -45,10 +38,8 @@ function loadItemDetail() {
             return;
         }
         var item = data.data;
-        var galleryHtml = renderGallery(item);
         itemDetail.innerHTML = ''
             + '<h1>' + escapeHtml(item.title) + '</h1>'
-            + galleryHtml
             + '<p class="price">' + money(item.price) + '</p>'
             + '<p>' + escapeHtml(item.description || '') + '</p>'
             + '<p>Status: ' + escapeHtml(item.status) + '</p>'
@@ -67,52 +58,15 @@ function loadItemDetail() {
     });
 }
 
-function renderGallery(item) {
-    if (!item.imageUrls || item.imageUrls.length === 0) {
-        return '';
-    }
-    var html = '<div class="item-gallery">';
-    for (var i = 0; i < item.imageUrls.length; i++) {
-        html += '<img src="' + escapeHtml(item.imageUrls[i]) + '" alt="' + escapeHtml(item.title) + ' photo ' + (i + 1) + '">';
-    }
-    html += '</div>';
-    return html;
-}
-
 if (itemForm) {
     itemForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        if (imageInput && imageInput.files.length > 6) {
-            showResult('You can upload up to 6 images.', true);
-            return;
-        }
         apiPost('items', new FormData(itemForm)).then(function(data) {
             showResult(data.message, !data.success);
             if (data.success) {
                 window.location.href = 'item-detail.html?id=' + data.data.itemID;
             }
         });
-    });
-}
-
-if (imageInput) {
-    imageInput.addEventListener('change', function() {
-        if (!imagePreview) {
-            return;
-        }
-        imagePreview.innerHTML = '';
-        if (imageInput.files.length > 6) {
-            showResult('You can upload up to 6 images.', true);
-            imageInput.value = '';
-            return;
-        }
-        for (var i = 0; i < imageInput.files.length; i++) {
-            var img = document.createElement('img');
-            img.src = URL.createObjectURL(imageInput.files[i]);
-            img.alt = 'Selected item photo';
-            imagePreview.appendChild(img);
-        }
-        showResult('');
     });
 }
 

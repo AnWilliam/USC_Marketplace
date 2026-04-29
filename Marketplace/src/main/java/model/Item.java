@@ -2,8 +2,6 @@ package model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Item {
     private int itemID;
@@ -14,7 +12,6 @@ public class Item {
     private BigDecimal price;
     private String status;
     private LocalDateTime dateListed;
-    private List<String> imageUrls = new ArrayList<>();
 
     public Item() {
     }
@@ -92,13 +89,5 @@ public class Item {
 
     public void setDateListed(LocalDateTime dateListed) {
         this.dateListed = dateListed;
-    }
-
-    public List<String> getImageUrls() {
-        return imageUrls;
-    }
-
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls == null ? new ArrayList<>() : imageUrls;
     }
 }

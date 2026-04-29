@@ -3,7 +3,6 @@ package util;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.servlet.http.HttpServletResponse;
 import model.Category;
@@ -85,24 +84,8 @@ public final class JsonUtil {
             + "\"description\":" + quote(item.getDescription()) + ","
             + "\"price\":" + money(item.getPrice()) + ","
             + "\"status\":" + quote(item.getStatus()) + ","
-            + "\"dateListed\":" + date(item.getDateListed()) + ","
-            + "\"imageUrls\":" + stringListToJson(item.getImageUrls())
+            + "\"dateListed\":" + date(item.getDateListed())
             + "}";
-    }
-
-    public static String stringListToJson(List<String> values) {
-        if (values == null) {
-            return "[]";
-        }
-        StringBuilder json = new StringBuilder("[");
-        for (int i = 0; i < values.size(); i++) {
-            if (i > 0) {
-                json.append(',');
-            }
-            json.append(quote(values.get(i)));
-        }
-        json.append(']');
-        return json.toString();
     }
 
     public static String categoryToJson(Category category) {
