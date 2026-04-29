@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Marketplace Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', Arial, sans-serif;
+        background: #fff8f0;
+        color: #222;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .header {
+        display: flex;
+        align-items: center;
+        background: #990000;
+        color: #fff;
+        padding: 0 24px;
+        height: 64px;
+        justify-content: space-between;
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    .marketplace-title {
+        font-size: 1.7em;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .create-listing-btn, .logout-btn {
+        background: #fff;
+        color: #990000;
+        border: 2px solid #990000;
+        border-radius: 4px;
+        padding: 8px 18px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .create-listing-btn:hover, .logout-btn:hover {
+        background: #990000;
+        color: #fff;
+    }
+    .main-content {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+    }
+    .sidebar {
+        width: 220px;
+        background: #f5e6d0;
+        padding: 24px 0 0 0;
+        border-right: 2px solid #990000;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .sidebar h3 {
+        color: #990000;
+        margin: 0 0 16px 24px;
+        font-size: 1.1em;
+    }
+    .category-list {
+        list-style: none;
+        padding: 0 0 0 24px;
+        margin: 0;
+    }
+    .category-list li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        color: #990000;
+        font-weight: 500;
+        transition: color 0.2s, background 0.2s, border 0.2s;
+        border: 2px solid #990000;
+        border-radius: 6px;
+        padding: 8px 16px;
+        background: #fff;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .category-list li:hover, .category-list li.active {
+        background: #990000;
+        color: #fff;
+    }
+    .center-panel {
+        flex: 1;
+        padding: 32px 40px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .welcome {
+        font-size: 1.3em;
+        margin-bottom: 24px;
+        color: #990000;
+        font-weight: bold;
+    }
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 24px;
+    }
+    .item-card {
+        background: #fff;
+        border: 1.5px solid #990000;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .item-card img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        background: #f5e6d0;
+    }
+    .item-name {
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 6px;
+        color: #990000;
+    }
+    .item-price {
+        color: #222;
+        font-size: 1em;
+        margin-bottom: 4px;
+    }
+    .chat-fab {
+        position: fixed;
+        bottom: 32px;
+        right: 32px;
+        background: #990000;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        cursor: pointer;
+        z-index: 1000;
+        transition: background 0.2s;
+    }
+    .chat-fab:hover {
+        background: #7c0000;
+    }
+    .chat-popup {
+        position: fixed;
+        bottom: 110px;
+        right: 32px;
+        width: 340px;
+        background: #fff;
+        border: 2px solid #990000;
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        max-height: 480px;
+        overflow: hidden;
+        animation: fadeIn 0.2s;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-header {
+        background: #990000;
+        color: #fff;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    .chat-close {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.5em;
+        cursor: pointer;
+        margin-left: 8px;
+    }
+    .chat-body {
+        flex: 1;
+        padding: 16px;
+        background: #fff8f0;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .chat-message {
+        max-width: 80%;
+        padding: 8px 14px;
+        border-radius: 16px;
+        font-size: 1em;
+        line-height: 1.4;
+        margin-bottom: 2px;
+        word-break: break-word;
+    }
+    .chat-message-sent {
+        align-self: flex-end;
+        background: #990000;
+        color: #fff;
+    }
+    .chat-message-received {
+        align-self: flex-start;
+        background: #f5e6d0;
+        color: #222;
+    }
+    .chat-input-row {
+        display: flex;
+        border-top: 1px solid #eee;
+        padding: 10px 12px;
+        background: #fff;
+    }
+    .chat-input-row input[type="text"] {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #990000;
+        border-radius: 4px;
+        font-size: 1em;
+        margin-right: 8px;
+    }
+    .chat-input-row button {
+        background: #990000;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .chat-input-row button:hover {
+        background: #7c0000;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <span class="marketplace-title">Marketplace</span>
+        </div>
+        <div class="header-right">
+            <button class="create-listing-btn">Create New Listing</button>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <aside class="sidebar">
+            <h3>Categories</h3>
+            <ul class="category-list">
+                <li>Under $25</li>
+                <li>Under $50</li>
+                <li>Under $100</li>
+                <li>Clothing</li>
+                <li>Accessories</li>
+                <li>Electronics</li>
+                <li>Sports</li>
+                <li>School Supplies</li>
+            </ul>
+        </aside>
+        <main class="center-panel">
+            <div class="welcome">Welcome shopper</div>
+            <div class="items-grid" id="itemsGrid">
+                <!-- Example item cards -->
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80" alt="Item">
+                    <div class="item-name">USC Hoodie</div>
+                    <div class="item-price">$35</div>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Item">
+                    <div class="item-name">Laptop</div>
+                    <div class="item-price">$400</div>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Item">
+                    <div class="item-name">Backpack</div>
+                    <div class="item-price">$20</div>
+                </div>
+                <!-- More items can be dynamically loaded here -->
+            </div>
+        </main>
+    </div>
+    <button class="chat-fab" title="Open Chat" onclick="openChat()">💬</button>
+    <div id="chatPopup" class="chat-popup" style="display:none;">
+        <div class="chat-header">
+            <span id="chatTitle">Send message: to <span id="chatSeller">Seller Name</span> about <span id="chatItem">Item Name</span></span>
+            <button class="chat-close" onclick="closeChat()">&times;</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Example conversation -->
+            <div class="chat-message chat-message-sent">Hi, is this item still available?</div>
+            <div class="chat-message chat-message-received">Yes, it is! Would you like to buy it?</div>
+            <!-- More messages will be appended here -->
+        </div>
+        <form class="chat-input-row" onsubmit="sendMessage(event)">
+            <input type="text" id="chatInput" placeholder="Type your message..." autocomplete="off" required />
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+    // Fetch and render items from backend
+    async function fetchItems(filter = null) {
+        const itemsGrid = document.getElementById('itemsGrid');
+        itemsGrid.innerHTML = '<div>Loading items...</div>';
+        let url = '/api/items';
+        if (filter) {
+            url += '?filter=' + encodeURIComponent(filter);
+        }
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch items');
+            const items = await response.json();
+            if (!Array.isArray(items) || items.length === 0) {
+                itemsGrid.innerHTML = '<div>No items found.</div>';
+                return;
+            }
+            itemsGrid.innerHTML = '';
+            for (const item of items) {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <img src="${item.image || 'https://via.placeholder.com/120'}" alt="Item">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">$${item.price}</div>
+                `;
+                // For signed-in users, allow clicking to open chat or view details
+                card.style.cursor = 'pointer';
+                card.onclick = function() {
+                    currentSeller = item.sellerName || 'Seller';
+                    currentItem = item.name || 'Item';
+                    document.getElementById('chatSeller').textContent = currentSeller;
+                    document.getElementById('chatItem').textContent = currentItem;
+                    openChat();
+                };
+                itemsGrid.appendChild(card);
+            }
+        } catch (err) {
+            itemsGrid.innerHTML = `<div style='color:#990000;'>Error: ${err.message}</div>`;
+        }
+    }
+    // Filtering
+    document.querySelectorAll('.category-list li').forEach(li => {
+        li.addEventListener('click', () => {
+            fetchItems(li.textContent);
+        });
+    });
+    // Initial load
+    fetchItems();
+
+    // Chat API integration
+    async function fetchMessages(sellerName) {
+        const chatBody = document.getElementById('chatBody');
+        chatBody.innerHTML = '<div>Loading conversation...</div>';
+        try {
+            const response = await fetch('/api/messages?seller=' + encodeURIComponent(sellerName));
+            if (!response.ok) throw new Error('Failed to fetch messages');
+            const messages = await response.json();
+            chatBody.innerHTML = '';
+            for (const msg of messages) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-message ' + (msg.sent ? 'chat-message-sent' : 'chat-message-received');
+                msgDiv.textContent = msg.text;
+                chatBody.appendChild(msgDiv);
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
+        } catch (err) {
+            chatBody.innerHTML = `<div style='color:#990000;'>Error: ${err.message}</div>`;
+        }
+    }
+    // Override openChat to fetch messages
+    let currentSeller = null;
+    let currentItem = null;
+    function openChat() {
+        if (!currentSeller || !currentItem) {
+            alert('Please select an item to chat about.');
+            return;
+        }
+        document.getElementById('chatPopup').style.display = 'flex';
+        document.getElementById('chatSeller').textContent = currentSeller;
+        document.getElementById('chatItem').textContent = currentItem;
+        fetchMessages(currentSeller);
+        setTimeout(() => {
+            var chatBody = document.getElementById('chatBody');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 100);
+    }
+    // Override card click to set seller
+    function setSellerAndOpenChat(sellerName, itemName) {
+        currentSeller = sellerName;
+        currentItem = itemName;
+        document.getElementById('chatSeller').textContent = currentSeller || 'Seller';
+        document.getElementById('chatItem').textContent = currentItem || 'Item';
+        openChat();
+    }
+    // Update card click logic
+    // (This is handled above in fetchItems)
+
+    // Send message to backend
+    async function sendMessage(event) {
+        event.preventDefault();
+        var input = document.getElementById('chatInput');
+        var message = input.value.trim();
+        if (message.length === 0 || !currentSeller) return;
+        var chatBody = document.getElementById('chatBody');
+        // Optimistically add message
+        var msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-message chat-message-sent';
+        msgDiv.textContent = message;
+        chatBody.appendChild(msgDiv);
+        input.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+        try {
+            const response = await fetch('/api/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ seller: currentSeller, text: message })
+            });
+            if (!response.ok) throw new Error('Failed to send message');
+            // Optionally, fetch updated messages
+            // await fetchMessages(currentSeller);
+        } catch (err) {
+            var errDiv = document.createElement('div');
+            errDiv.className = 'chat-message chat-message-received';
+            errDiv.style.color = '#990000';
+            errDiv.textContent = 'Error: ' + err.message;
+            chatBody.appendChild(errDiv);
+        }
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+    // Attach sendMessage to form
+    document.querySelector('.chat-input-row').onsubmit = sendMessage;
+
+    // Set initial placeholders to empty so they never show 'Seller Name' or 'Item Name'
+    document.getElementById('chatSeller').textContent = '';
+    document.getElementById('chatItem').textContent = '';
+    </script>
+</body>
+</html>
