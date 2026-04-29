@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | USC Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="index.html">USC Marketplace</a>
+        <nav><a href="register.html">Register</a><a href="items.html">Browse</a></nav>
+    </header>
+    <main class="form-page">
+        <form id="loginForm" class="panel">
+            <h1>Login</h1>
+            <label>Email <input type="email" name="email" required></label>
+            <label>Password <input type="password" name="password" required></label>
+            <button type="submit" class="button primary">Login</button>
+            <p id="result" class="result"></p>
+        </form>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

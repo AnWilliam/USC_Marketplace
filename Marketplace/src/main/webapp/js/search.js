@@ -1,0 +1,1 @@
+// Search behavior currently lives in items.js because search results render on the items page.

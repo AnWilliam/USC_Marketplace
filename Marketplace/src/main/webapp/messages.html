@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversation | USC Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="index.html">USC Marketplace</a>
+        <nav><a href="conversations.html">Back to messages</a></nav>
+    </header>
+    <main class="page-shell chat-layout">
+        <section id="messageList" class="message-list"></section>
+        <form id="messageForm" class="message-form">
+            <input type="text" name="content" placeholder="Type a message" required>
+            <button type="submit" class="button primary">Send</button>
+        </form>
+        <p id="result" class="result"></p>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/messages.js"></script>
+</body>
+</html>
