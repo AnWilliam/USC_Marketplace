@@ -28,11 +28,6 @@
     <servlet>
         <servlet-name>ItemServlet</servlet-name>
         <servlet-class>servlet.ItemServlet</servlet-class>
-        <multipart-config>
-            <file-size-threshold>1048576</file-size-threshold>
-            <max-file-size>5242880</max-file-size>
-            <max-request-size>33554432</max-request-size>
-        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>ItemServlet</servlet-name>
@@ -75,12 +70,4 @@
         <url-pattern>/profile</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>ImageServlet</servlet-name>
-        <servlet-class>servlet.ImageServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>/uploads/*</url-pattern>
-    </servlet-mapping>
 </web-app>
