@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USC Marketplace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="https://identity.usc.edu/wp-content/uploads/2022/09/USC_Wordmark_Cardinal.png" alt="USC Logo" class="usc-logo">
+    </div>
+    <div class="navbar-right">
+      <button id="create-listing-btn" class="usc-btn">+ Create New Listing</button>
+      <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile" class="profile-icon">
+    </div>
+  </nav>
+
+  <!-- Sorting Tags -->
+  <div class="sorting-tags" id="sorting-tags">
+    <span class="tag-label">Sort by:</span>
+    <button class="tag-pill active" data-sort="newest">Newest</button>
+    <button class="tag-pill" data-sort="low">Price: Low to High</button>
+    <button class="tag-pill" data-sort="high">Price: High to Low</button>
+    <span class="tag-label">Filter:</span>
+    <button class="tag-pill" data-filter="Clothing">Clothing</button>
+    <button class="tag-pill" data-filter="Electronics">Electronics</button>
+    <button class="tag-pill" data-filter="Sports">Sports</button>
+    <button class="tag-pill" data-filter="Hobby">Hobby</button>
+    <button class="tag-pill" data-filter="School Supplies">School Supplies</button>
+    <button class="tag-pill" data-filter="under25">Under $25</button>
+    <button class="tag-pill" data-filter="under50">Under $50</button>
+    <button class="tag-pill" data-filter="under100">Under $100</button>
+  </div>
+
+  <!-- Listings Page -->
+  <div id="listings-page" class="page">
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <input type="text" id="search-bar" placeholder="Search...">
+        <a href="#" class="sidebar-link usc-red">Search Filters</a>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Categories</div>
+          <a href="#" class="sidebar-link category-link" data-category="Clothing">Clothing</a>
+          <a href="#" class="sidebar-link category-link" data-category="Accessories">Accessories</a>
+          <a href="#" class="sidebar-link category-link" data-category="Electronics">Electronics</a>
+          <a href="#" class="sidebar-link category-link" data-category="Sports">Sports</a>
+          <a href="#" class="sidebar-link category-link" data-category="Hobby">Hobby</a>
+          <a href="#" class="sidebar-link category-link" data-category="School Supplies">School Supplies</a>
+          <a href="#" class="sidebar-link category-link" data-category="Entertainment">Entertainment</a>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Price</div>
+          <label>Above: <input type="number" id="price-above" min="0" placeholder="$"></label>
+          <label>Below: <input type="number" id="price-below" min="0" placeholder="$"></label>
+        </div>
+      </aside>
+      <!-- Main Content -->
+      <main class="main-content">
+        <div id="listings-grid" class="listings-grid"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Listing Page -->
+  <div id="add-listing-page" class="page" style="display:none;">
+    <a href="#" id="back-to-listings" class="back-link">&larr; Back to Listings</a>
+    <h2>Create New Listing</h2>
+    <form id="add-listing-form">
+      <label>Item Name*<input type="text" id="item-name" required></label>
+      <label>Price*<div class="input-prefix"><span>$</span><input type="number" id="item-price" min="0" required></div></label>
+      <label>Category*
+        <select id="item-category" required>
+          <option value="">Select Category</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Sports">Sports</option>
+          <option value="Hobby">Hobby</option>
+          <option value="School Supplies">School Supplies</option>
+          <option value="Entertainment">Entertainment</option>
+        </select>
+      </label>
+      <label>Description<textarea id="item-description" rows="4"></textarea></label>
+      <label>Upload Photo
+        <div id="upload-box" class="upload-box">Click to upload or drag photo here</div>
+        <input type="file" id="item-image" accept="image/*" style="display:none;">
+        <img id="image-preview" class="image-preview" style="display:none;"/>
+      </label>
+      <div class="condition-group">
+        <span>Condition*</span>
+        <label><input type="radio" name="item-condition" value="New" required> New</label>
+        <label><input type="radio" name="item-condition" value="Like New"> Like New</label>
+        <label><input type="radio" name="item-condition" value="Good"> Good</label>
+        <label><input type="radio" name="item-condition" value="Fair"> Fair</label>
+      </div>
+      <button type="submit" class="usc-btn large">Post Listing</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

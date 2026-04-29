@@ -1,0 +1,294 @@
+body {
+  background: #f0f0f0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  color: #222;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  z-index: 10;
+}
+.usc-logo {
+  height: 36px;
+}
+.profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-left: 1rem;
+  border: 2px solid #f0f0f0;
+}
+.usc-btn {
+  background: #990000;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.usc-btn.large {
+  width: 100%;
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+}
+.usc-btn:hover {
+  background: #b31b1b;
+}
+
+.container {
+  display: flex;
+  margin: 2rem auto;
+  max-width: 1400px;
+}
+.sidebar {
+  width: 240px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  margin-right: 2rem;
+  height: fit-content;
+}
+.sidebar input[type="text"],
+.sidebar input[type="number"] {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.sidebar-link {
+  display: block;
+  color: #222;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+.sidebar-link.usc-red {
+  color: #990000;
+  font-weight: bold;
+}
+.sidebar-link:hover {
+  color: #990000;
+}
+.sidebar-section {
+  margin-top: 1.5rem;
+}
+.sidebar-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #990000;
+}
+
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.5rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 340px;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(153,0,0,0.10);
+}
+.card-image {
+  width: 100%;
+  height: 160px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  object-fit: cover;
+  display: block;
+}
+.card-placeholder {
+  width: 100%;
+  height: 160px;
+  background: #d0d0d0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 1.2rem;
+}
+.card-price {
+  color: #990000;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+.card-seller {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+.card-condition {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.2rem;
+}
+
+.sorting-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  padding: 1rem 2rem 0.5rem 2rem;
+  position: sticky;
+  top: 64px;
+  z-index: 9;
+}
+.tag-label {
+  font-weight: bold;
+  color: #990000;
+  margin-right: 0.5rem;
+}
+.tag-pill {
+  border: none;
+  background: #f0f0f0;
+  color: #990000;
+  border-radius: 999px;
+  padding: 0.4rem 1.2rem;
+  font-size: 1rem;
+  margin-right: 0.2rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.tag-pill.active, .tag-pill:active {
+  background: #990000;
+  color: #fff;
+}
+.tag-pill:focus {
+  outline: 2px solid #FFCC00;
+}
+
+.page {
+  width: 100%;
+}
+
+/* Add Listing Page */
+#add-listing-page {
+  max-width: 480px;
+  margin: 2.5rem auto 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 2.5rem 2rem 2rem 2rem;
+}
+.back-link {
+  color: #990000;
+  text-decoration: none;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+#add-listing-form label {
+  display: block;
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+}
+#add-listing-form input[type="text"],
+#add-listing-form input[type="number"],
+#add-listing-form select,
+#add-listing-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  margin-top: 0.3rem;
+  box-sizing: border-box;
+}
+.input-prefix {
+  display: flex;
+  align-items: center;
+}
+.input-prefix span {
+  margin-right: 0.5rem;
+  color: #888;
+}
+.upload-box {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  color: #888;
+  background: #fafafa;
+  cursor: pointer;
+  margin-top: 0.3rem;
+  margin-bottom: 0.5rem;
+  transition: border 0.2s;
+}
+.upload-box.dragover {
+  border-color: #990000;
+  color: #990000;
+}
+.image-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  display: block;
+}
+.condition-group {
+  margin: 1.2rem 0 0.5rem 0;
+}
+.condition-group label {
+  margin-right: 1.2rem;
+  font-weight: 400;
+}
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 2rem;
+    margin-right: 0;
+  }
+}
+@media (max-width: 600px) {
+  .navbar, .sorting-tags {
+    padding: 0.5rem 0.5rem;
+  }
+  .container {
+    margin: 1rem auto;
+  }
+  .sidebar {
+    padding: 1rem;
+  }
+  #add-listing-page {
+    padding: 1.2rem 0.5rem;
+  }
+}
