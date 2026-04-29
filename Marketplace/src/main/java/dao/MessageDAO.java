@@ -42,7 +42,7 @@ public class MessageDAO {
     }
 
     public List<Message> findByConversationId(int conversationID) throws SQLException {
-        String sql = "SELECT * FROM Messages WHERE conversationID = ? ORDER BY timestamp ASC";
+        String sql = "SELECT m.*, u.name AS senderName FROM Messages m JOIN Users u ON m.senderID = u.userID WHERE m.conversationID = ? ORDER BY m.timestamp ASC";
         List<Message> messages = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -68,7 +68,7 @@ public class MessageDAO {
 
     private Message mapMessage(ResultSet rs) throws SQLException {
         Timestamp timestamp = rs.getTimestamp("timestamp");
-        return new Message(
+        Message message = new Message(
             rs.getInt("messageID"),
             rs.getInt("conversationID"),
             rs.getInt("senderID"),
@@ -76,5 +76,13 @@ public class MessageDAO {
             timestamp == null ? null : timestamp.toLocalDateTime(),
             rs.getBoolean("is_read")
         );
+        // set senderName if present in ResultSet
+        try {
+            String senderName = rs.getString("senderName");
+            message.setSenderName(senderName);
+        } catch (SQLException e) {
+            // Column not present; ignore to keep backward compatibility
+        }
+        return message;
     }
 }

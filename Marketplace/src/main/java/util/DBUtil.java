@@ -29,8 +29,10 @@ public final class DBUtil {
 
     public static Connection getConnection() throws SQLException {
         String driver = PROPERTIES.getProperty("db.driver", "com.mysql.cj.jdbc.Driver");
-        String url = PROPERTIES.getProperty("db.url", "jdbc:mysql://localhost:3306/usc_marketplace");
-        String username = trimOrEmpty(PROPERTIES.getProperty("db.username", "root"));
+        String url = PROPERTIES.getProperty(
+        	    "db.url",
+        	    "jdbc:mysql://localhost:3306/usc_marketplace?serverTimezone=America/Los_Angeles"
+        	);        String username = trimOrEmpty(PROPERTIES.getProperty("db.username", "root"));
         String password = trimOrEmpty(PROPERTIES.getProperty("db.password", ""));
 
         try {

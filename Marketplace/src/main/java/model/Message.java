@@ -9,6 +9,7 @@ public class Message {
     private String content;
     private LocalDateTime timestamp;
     private boolean read;
+    private String senderName; // new field
 
     public Message() {
     }
@@ -68,5 +69,14 @@ public class Message {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    // New getter and setter for senderName
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }

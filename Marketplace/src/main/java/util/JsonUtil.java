@@ -10,6 +10,7 @@ import model.Conversation;
 import model.Item;
 import model.Message;
 import model.User;
+import java.time.format.DateTimeFormatter;
 
 public final class JsonUtil {
     private JsonUtil() {
@@ -51,7 +52,12 @@ public final class JsonUtil {
     }
 
     public static String date(LocalDateTime value) {
-        return value == null ? "null" : quote(value.toString());
+        if (value == null) {
+            return "null";
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return quote(value.format(formatter));
     }
 
     public static String money(BigDecimal value) {
@@ -124,6 +130,7 @@ public final class JsonUtil {
             + "\"messageID\":" + message.getMessageID() + ","
             + "\"conversationID\":" + message.getConversationID() + ","
             + "\"senderID\":" + message.getSenderID() + ","
+            + "\"senderName\":" + quote(message.getSenderName()) + ","
             + "\"content\":" + quote(message.getContent()) + ","
             + "\"timestamp\":" + date(message.getTimestamp()) + ","
             + "\"read\":" + message.isRead()
