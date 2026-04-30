@@ -8,8 +8,12 @@
 </head>
 <body>
     <header class="topbar">
-        <a class="brand" href="index.html">USC Marketplace</a>
-        <nav><a href="items.html">Browse</a><a href="conversations.html">Messages</a></nav>
+        <a class="brand" href="items.html">USC Marketplace</a>
+        <nav>
+            <a href="items.html">Browse</a>
+            <a href="conversations.html">Messages</a>
+            <button type="button" id="logoutButton" class="button">Logout</button>
+        </nav>
     </header>
     <main class="form-page">
         <form id="profileForm" class="panel">
@@ -18,7 +22,6 @@
             <label>Profile picture URL <input type="url" name="profilePicture"></label>
             <label>Bio <textarea name="bio" rows="5"></textarea></label>
             <button type="submit" class="button primary">Save profile</button>
-            <button type="button" id="logoutButton" class="button">Logout</button>
             <p id="result" class="result"></p>
         </form>
     </main>

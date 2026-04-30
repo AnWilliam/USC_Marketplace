@@ -9,7 +9,7 @@
 <body class="market-body">
     <div id="listings-page">
         <nav class="market-nav">
-            <a class="market-brand" href="index.html">
+            <a class="market-brand" href="items.html">
                 <span class="market-brand-mark">USC</span>
                 <span>Marketplace</span>
             </a>
@@ -17,10 +17,7 @@
                 <a class="nav-muted" href="conversations.html">Messages</a>
                 <button type="button" id="btnCreateListing" class="btn-create" aria-label="Create new listing">+ Create New Listing</button>
                 <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <img src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
                 </a>
             </div>
         </nav>
@@ -57,17 +54,14 @@
 
     <div id="add-listing-page" class="add-page page-hidden">
         <nav class="market-nav">
-            <a class="market-brand" href="index.html">
+            <a class="market-brand" href="items.html">
                 <span class="market-brand-mark">USC</span>
                 <span>Marketplace</span>
             </a>
             <div class="market-nav-actions">
                 <a class="nav-muted" href="items.html">Browse</a>
                 <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <img src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
                 </a>
             </div>
         </nav>
@@ -75,7 +69,7 @@
         <button type="button" class="back-link" id="btnBackToListings">&larr; Back to Listings</button>
         <h1>Create New Listing</h1>
 
-        <form id="listingForm" class="form-stack">
+        <form id="listingForm" class="form-stack" novalidate>
             <label>Item Name
                 <input type="text" name="title" required maxlength="150" autocomplete="off">
             </label>
@@ -96,9 +90,8 @@
 
             <label>Upload Photo</label>
             <div class="photo-drop" id="photoDrop">
-                <input type="file" id="photoInput" accept="image/*">
+                <input type="file" id="photoInput" name="photo" accept="image/*">
                 <p class="photo-drop-hint">Click to upload or drag photo here</p>
-                <p class="photo-drop-hint" style="font-size: 0.75rem;">Preview only — listing saves title, price, category, description, and condition.</p>
             </div>
             <img id="photoPreview" class="photo-preview" alt="Photo preview">
 

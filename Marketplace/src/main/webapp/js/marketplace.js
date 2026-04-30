@@ -1,4 +1,6 @@
 (function() {
+    var ITEM_IMAGE_PLACEHOLDER = 'images/usc-trojan-placeholder.svg';
+
     var CATEGORY_SIDEBAR_ORDER = [
         'Clothing', 'Accessories', 'Electronics', 'Sports', 'Hobby', 'School Supplies', 'Entertainment'
     ];
@@ -46,6 +48,32 @@
     var photoPreview = document.getElementById('photoPreview');
     var photoDrop = document.getElementById('photoDrop');
 
+    var currentUserID = null;
+
+    function refreshSessionUser() {
+        return apiGet('profile').then(function(data) {
+            currentUserID = data.success && data.data ? data.data.userID : null;
+        }).catch(function() {
+            currentUserID = null;
+        });
+    }
+
+    function updateItemStatus(itemID, status) {
+        var fd = new FormData();
+        fd.append('action', 'updateStatus');
+        fd.append('itemID', String(itemID));
+        fd.append('status', status);
+        return apiPost('items', fd);
+    }
+
+    function pickImageUrl(raw) {
+        var u = raw.imageUrl || raw.photoUrl || raw.photo_path;
+        if (u == null || String(u).trim() === '') {
+            return null;
+        }
+        return String(u).trim();
+    }
+
     function normalizeItem(raw) {
         var ts = 0;
         if (raw.dateListed) {
@@ -56,12 +84,14 @@
         }
         return {
             id: raw.itemID,
+            sellerID: Number(raw.sellerID),
+            status: raw.status || 'AVAILABLE',
             name: raw.title,
             price: parseFloat(raw.price),
             category: raw.categoryName || '',
             categoryID: raw.categoryID,
             seller: raw.sellerName || ('User ' + raw.sellerID),
-            image: raw.imageUrl || null,
+            image: pickImageUrl(raw),
             condition: raw.itemCondition || '',
             description: raw.description || '',
             dateListed: ts
@@ -89,6 +119,9 @@
     function loadCategories() {
         return apiGet('categories').then(function(data) {
             if (!data.success || !data.data) {
+                if (categorySelect) {
+                    categorySelect.innerHTML = '<option value="">Could not load categories — refresh or try again</option>';
+                }
                 return;
             }
             var sorted = sortCategories(data.data);
@@ -124,7 +157,25 @@
                     categorySelect.appendChild(opt);
                 });
             }
+        }).catch(function() {
+            if (categorySelect) {
+                categorySelect.innerHTML = '<option value="">Categories unavailable — refresh the page</option>';
+            }
         });
+    }
+
+    function dedupeItemsById(rows) {
+        var seen = {};
+        var out = [];
+        (rows || []).forEach(function(row) {
+            var id = row.itemID;
+            if (id == null || seen[id]) {
+                return;
+            }
+            seen[id] = true;
+            out.push(row);
+        });
+        return out;
     }
 
     function fetchListings(url) {
@@ -133,7 +184,7 @@
                 showMsg(data.message || 'Could not load items.', true);
                 return;
             }
-            state.sourceItems = (data.data || []).map(normalizeItem);
+            state.sourceItems = dedupeItemsById(data.data).map(normalizeItem);
             renderGrid();
         });
     }
@@ -194,15 +245,59 @@
             return;
         }
         itemsGrid.innerHTML = sorted.map(renderCard).join('');
+        bindGridOwnerActions();
+    }
+
+    function bindGridOwnerActions() {
+        if (!itemsGrid || itemsGrid.dataset.ownerBound === '1') {
+            return;
+        }
+        itemsGrid.dataset.ownerBound = '1';
+        itemsGrid.addEventListener('click', function(event) {
+            var btn = event.target.closest('[data-owner-action]');
+            if (!btn) {
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            var itemID = parseInt(btn.getAttribute('data-item-id'), 10);
+            var action = btn.getAttribute('data-owner-action');
+            if (action === 'withdraw' && !window.confirm('Remove this listing from the marketplace?')) {
+                return;
+            }
+            var status = action === 'sold' ? 'SOLD' : 'WITHDRAWN';
+            updateItemStatus(itemID, status).then(function(data) {
+                if (!data.success) {
+                    showMsg(data.message || 'Could not update listing.', true);
+                    return;
+                }
+                showMsg(action === 'sold' ? 'Marked as sold.' : 'Listing removed.', false);
+                var q = searchInput && searchInput.value.trim();
+                fetchListings(q ? 'search?' + new URLSearchParams({ q: q }).toString() : 'items');
+            });
+        });
     }
 
     function renderCard(item) {
-        var imgHtml = item.image
-            ? '<div class="card-img-placeholder"><img src="' + escapeHtml(item.image) + '" alt=""></div>'
-            : '<div class="card-img-placeholder">No image</div>';
+        var ownerBar = '';
+        if (currentUserID != null && Number(item.sellerID) === Number(currentUserID) && item.status === 'AVAILABLE') {
+            ownerBar = ''
+                + '<div class="card-owner-actions">'
+                + '<button type="button" class="btn-mark-sold" data-owner-action="sold" data-item-id="' + item.id + '">Mark sold</button>'
+                + '<button type="button" class="btn-remove-listing" data-owner-action="withdraw" data-item-id="' + item.id + '" title="Remove listing" aria-label="Remove listing">&times;</button>'
+                + '</div>';
+        }
+        var hasPhoto = !!(item.image && String(item.image).trim());
+        var src = hasPhoto ? escapeHtml(String(item.image).trim()) : ITEM_IMAGE_PLACEHOLDER;
+        var imgClass = 'card-thumb-img' + (hasPhoto ? ' card-thumb-real' : '');
+        var imgHtml = ''
+            + '<div class="card-img-placeholder card-img-ph-wrap">'
+            + '<img src="' + src + '" alt="" class="' + imgClass + '">'
+            + '</div>';
         return ''
             + '<article class="item-card-market">'
-            + '<a href="item-detail.html?id=' + item.id + '">'
+            + ownerBar
+            + '<a class="card-market-link" href="item-detail.html?id=' + item.id + '">'
             + imgHtml
             + '<div class="card-body-market">'
             + '<p class="card-price">' + money(item.price) + '</p>'
@@ -390,8 +485,12 @@
     }
 
     if (listingForm) {
+        var listingSubmitting = false;
         listingForm.addEventListener('submit', function(event) {
             event.preventDefault();
+            if (listingSubmitting) {
+                return;
+            }
             var title = listingForm.title.value.trim();
             var priceRaw = listingForm.price.value.trim();
             var categoryID = listingForm.categoryID.value;
@@ -400,7 +499,7 @@
             var itemCondition = condInput ? condInput.value : '';
 
             if (!title || !priceRaw || !categoryID) {
-                showMsg('Please fill in item name, price, and category.', true);
+                showMsg('Please fill in item name, price, and choose a category.', true);
                 return;
             }
 
@@ -410,6 +509,16 @@
             fd.append('categoryID', categoryID);
             fd.append('description', desc);
             fd.append('itemCondition', itemCondition);
+
+            if (photoInput && photoInput.files && photoInput.files[0]) {
+                fd.append('photo', photoInput.files[0], photoInput.files[0].name || 'photo.jpg');
+            }
+
+            var submitBtn = listingForm.querySelector('button[type="submit"]');
+            listingSubmitting = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+            }
 
             apiPost('items', fd).then(function(data) {
                 if (!data.success) {
@@ -425,11 +534,18 @@
                 showView('listings');
                 var q = searchInput && searchInput.value.trim();
                 fetchListings(q ? 'search?' + new URLSearchParams({ q: q }).toString() : 'items');
+            }).catch(function(err) {
+                showMsg(err.message || 'Could not reach server.', true);
+            }).finally(function() {
+                listingSubmitting = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                }
             });
         });
     }
 
-    loadCategories().then(function() {
+    loadCategories().then(refreshSessionUser).then(function() {
         buildPills();
         return fetchListings('items');
     }).then(function() {

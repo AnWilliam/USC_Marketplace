@@ -9,7 +9,7 @@ if (registerForm) {
         apiPost('register', new FormData(registerForm)).then(function(data) {
             showResult(data.message, !data.success);
             if (data.success) {
-                window.location.href = 'items.html';
+                window.location.href = consumeRedirectAfterLogin('items.html');
             }
         });
     });
@@ -23,7 +23,7 @@ if (loginForm) {
         apiPost('login', new FormData(loginForm)).then(function(data) {
             showResult(data.message, !data.success);
             if (data.success) {
-                window.location.href = 'items.html';
+                window.location.href = consumeRedirectAfterLogin('items.html');
             }
         });
     });

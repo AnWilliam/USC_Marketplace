@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 public final class ValidationUtil {
-    private static final Set<String> VALID_STATUSES = Set.of("AVAILABLE", "SOLD", "PENDING");
+    private static final Set<String> VALID_STATUSES = Set.of("AVAILABLE", "SOLD", "PENDING", "WITHDRAWN");
 
     private ValidationUtil() {
     }

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" role="img" aria-labelledby="title desc">
+  <title id="title">USC Trojan placeholder</title>
+  <desc id="desc">Decorative Trojan-inspired helmet silhouette for listings without a photo.</desc>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#660000"/>
+      <stop offset="100%" stop-color="#990000"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="320" fill="#f5f5f5"/>
+  <circle cx="200" cy="168" r="118" fill="url(#g)"/>
+  <!-- Stylized crest / helmet silhouette (generic; not official mascot art) -->
+  <path fill="#ffcc00" d="M200 62c-52 0-94 38-94 85 0 28 14 53 36 68v42l58-34 58 34v-42c22-15 36-40 36-68 0-47-42-85-94-85zm0 28c34 0 62 26 62 58 0 20-10 37-26 46l-8 5v28l-28-16-28 16v-28l-8-5c-16-9-26-26-26-46 0-32 28-58 62-58z"/>
+  <path fill="#ffffff" opacity=".92" d="M132 178c18 36 52 58 68 58s50-22 68-58c-22 14-46 22-68 22s-46-8-68-22z"/>
+  <text x="200" y="278" text-anchor="middle" fill="#990000" font-family="Georgia,serif" font-size="22" font-weight="700">Fight On!</text>
+</svg>

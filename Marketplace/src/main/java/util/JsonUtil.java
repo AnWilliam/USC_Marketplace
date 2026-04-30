@@ -89,6 +89,7 @@ public final class JsonUtil {
             + "\"title\":" + quote(item.getTitle()) + ","
             + "\"description\":" + quote(item.getDescription()) + ","
             + "\"itemCondition\":" + quote(item.getItemCondition()) + ","
+            + "\"imageUrl\":" + quote(item.getPhotoPath()) + ","
             + "\"price\":" + money(item.getPrice()) + ","
             + "\"status\":" + quote(item.getStatus()) + ","
             + "\"dateListed\":" + date(item.getDateListed()) + ","

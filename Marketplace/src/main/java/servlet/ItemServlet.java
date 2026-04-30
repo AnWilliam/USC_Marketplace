@@ -1,15 +1,22 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import model.Item;
 import service.ItemService;
 import util.JsonUtil;
@@ -50,6 +57,13 @@ public class ItemServlet extends HttpServlet {
         }
 
         try {
+            prepareMultipart(request);
+        } catch (IOException | ServletException e) {
+            JsonUtil.writeError(response, HttpServletResponse.SC_BAD_REQUEST, "Could not read form data.");
+            return;
+        }
+
+        try {
             String action = request.getParameter("action");
             if ("updateStatus".equals(action)) {
                 int itemID = Integer.parseInt(request.getParameter("itemID"));
@@ -66,12 +80,30 @@ public class ItemServlet extends HttpServlet {
             BigDecimal price = new BigDecimal(request.getParameter("price"));
 
             Item item = itemService.createItem(userID, categoryID, title, description, price, itemCondition);
+
+            Part photoPart = request.getPart("photo");
+            if (photoPart != null && photoPart.getSize() > 0) {
+                String savedRelative = saveItemPhoto(request, item.getItemID(), photoPart);
+                itemService.updateItemPhoto(item.getItemID(), userID, savedRelative);
+                item = itemService.getItemById(item.getItemID());
+            }
+
             JsonUtil.writeJson(response, HttpServletResponse.SC_CREATED,
                 "{\"success\":true,\"message\":\"Item created.\",\"data\":" + JsonUtil.itemToJson(item) + "}");
         } catch (IllegalArgumentException e) {
             JsonUtil.writeError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        } catch (IOException e) {
+            JsonUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not save photo.");
         } catch (SQLException e) {
             JsonUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
+        }
+    }
+
+    /** Ensures multipart fields are parsed so {@link HttpServletRequest#getParameter(String)} works (Tomcat-safe). */
+    private static void prepareMultipart(HttpServletRequest request) throws IOException, ServletException {
+        String ct = request.getContentType();
+        if (ct != null && ct.toLowerCase(Locale.ROOT).startsWith("multipart/form-data")) {
+            request.getParts();
         }
     }
 
@@ -85,5 +117,49 @@ public class ItemServlet extends HttpServlet {
         }
         json.append(']');
         return json.toString();
+    }
+
+    private static String saveItemPhoto(HttpServletRequest request, int itemID, Part part) throws IOException {
+        String ctype = part.getContentType();
+        if (ctype == null || !ctype.toLowerCase(Locale.ROOT).startsWith("image/")) {
+            throw new IllegalArgumentException("Photo must be an image file.");
+        }
+
+        String ext = extensionFromFilename(part.getSubmittedFileName());
+        String relative = "uploads/items/" + itemID + ext;
+
+        String basePath = request.getServletContext().getRealPath("/");
+        if (basePath == null) {
+            throw new IOException("Cannot resolve application directory for uploads.");
+        }
+
+        Path uploadDir = Paths.get(basePath, "uploads", "items");
+        Files.createDirectories(uploadDir);
+
+        Path target = uploadDir.resolve(itemID + ext);
+        try (InputStream in = part.getInputStream()) {
+            Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return relative;
+    }
+
+    private static String extensionFromFilename(String submittedName) {
+        if (submittedName == null || submittedName.isEmpty()) {
+            return ".jpg";
+        }
+        String name = submittedName.toLowerCase(Locale.ROOT);
+        int dot = name.lastIndexOf('.');
+        String ext = dot >= 0 ? name.substring(dot) : "";
+        switch (ext) {
+            case ".png":
+            case ".gif":
+            case ".webp":
+            case ".jpeg":
+            case ".jpg":
+                return ext;
+            default:
+                return ".jpg";
+        }
     }
 }

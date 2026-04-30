@@ -1,1 +1,3 @@
 /build/
+/src/main/webapp/uploads/items/*
+!/src/main/webapp/uploads/items/.gitkeep

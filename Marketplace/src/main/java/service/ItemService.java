@@ -71,7 +71,7 @@ public class ItemService {
         }
     }
 
-    public void updateItemPhoto(int itemID, int sellerID, String relativePhotoPath) throws SQLException {
+    public final void updateItemPhoto(int itemID, int sellerID, String relativePhotoPath) throws SQLException {
         if (relativePhotoPath == null || relativePhotoPath.trim().isEmpty()) {
             throw new IllegalArgumentException("Photo path is required.");
         }

@@ -1,0 +1,1 @@
+# Keeps uploads/items tracked in git; uploaded images are ignored via .gitignore.
