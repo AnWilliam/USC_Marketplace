@@ -70,4 +70,14 @@ public class ItemService {
             throw new IllegalArgumentException("Item not found or you are not the seller.");
         }
     }
+
+    public void updateItemPhoto(int itemID, int sellerID, String relativePhotoPath) throws SQLException {
+        if (relativePhotoPath == null || relativePhotoPath.trim().isEmpty()) {
+            throw new IllegalArgumentException("Photo path is required.");
+        }
+        boolean updated = itemDAO.updatePhotoPath(itemID, sellerID, relativePhotoPath.trim());
+        if (!updated) {
+            throw new IllegalArgumentException("Item not found or you are not the seller.");
+        }
+    }
 }
