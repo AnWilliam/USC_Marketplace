@@ -7,7 +7,7 @@ function loadConversations() {
 
     apiGet('conversations').then(function(data) {
         if (!data.success) {
-            showResult(data.message, true);
+            window.location.href = loginUrlWithNext();
             return;
         }
 
@@ -26,8 +26,14 @@ function loadConversations() {
                 ? escapeHtml(conversation.lastMessage)
                 : 'No messages yet.';
 
+            var avatarSrc = conversation.otherUserAvatarUrl && String(conversation.otherUserAvatarUrl).trim() !== ''
+                ? escapeHtml(String(conversation.otherUserAvatarUrl).trim())
+                : 'images/icon-profile.svg';
+
             return ''
-                + '<div class="list-row">'
+                + '<div class="list-row conv-row-inner">'
+                + '<img class="msg-avatar" src="' + avatarSrc + '" alt="">'
+                + '<div class="conv-row-body">'
                 + '<strong>' + escapeHtml(itemTitle) + '</strong>'
                 + '<p>With ' + escapeHtml(otherUserName) + '</p>'
                 + '<p class="summary">' + lastMessage + '</p>'
@@ -36,7 +42,7 @@ function loadConversations() {
                 + '<a class="button" href="messages.html?conversationID='
                 + conversation.conversationID
                 + '">Open</a>'
-                + '</div>';
+                + '</div></div>';
         }).join('');
 
         conversationList.innerHTML = html || '<p>No conversations yet.</p>';

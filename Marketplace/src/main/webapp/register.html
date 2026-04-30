@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | USC Marketplace</title>
+    <link rel="stylesheet" href="css/marketplace.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="items.html">USC Marketplace</a>
-        <nav><a href="login.html">Login</a><a href="items.html">Browse</a></nav>
-    </header>
+<body class="market-body">
+    <nav class="market-nav">
+        <a class="market-brand" href="items.html">
+            <span class="market-brand-mark">USC</span>
+            <span>Marketplace</span>
+        </a>
+        <div class="market-nav-actions">
+            <a class="nav-muted" href="items.html">Browse</a>
+            <a class="nav-muted" href="login.html">Login</a>
+        </div>
+    </nav>
     <main class="form-page">
         <form id="registerForm" class="panel">
             <h1>Create account</h1>
@@ -19,10 +26,9 @@
             <label>Password <input type="password" name="password" required></label>
             <button type="submit" class="button primary">Register</button>
             <p id="result" class="result"></p>
-            <p class="summary">Build: v4</p>
         </form>
     </main>
-    <script src="js/api.js?v=v4"></script>
-    <script src="js/auth.js?v=v4"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
 /build/
 /src/main/webapp/uploads/items/*
 !/src/main/webapp/uploads/items/.gitkeep
+/src/main/webapp/uploads/profile/*
+!/src/main/webapp/uploads/profile/.gitkeep

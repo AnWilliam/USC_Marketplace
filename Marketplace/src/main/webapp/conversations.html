@@ -4,19 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages | USC Marketplace</title>
+    <link rel="stylesheet" href="css/marketplace.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="items.html">USC Marketplace</a>
-        <nav><a href="items.html">Browse</a><a href="profile.html">Profile</a></nav>
-    </header>
+<body class="market-body auth-unknown">
+    <nav class="market-nav">
+        <a class="market-brand" href="items.html">
+            <span class="market-brand-mark">USC</span>
+            <span>Marketplace</span>
+        </a>
+        <div class="market-nav-actions">
+            <a class="nav-muted nav-always" href="items.html">Browse</a>
+            <a class="nav-muted nav-user-only" href="conversations.html">Messages</a>
+            <a class="nav-muted nav-guest-only" href="login.html">Login</a>
+            <a class="nav-muted nav-guest-only" href="register.html">Register</a>
+            <a class="icon-profile nav-user-only" href="profile.html" title="Profile" aria-label="Profile">
+                <img id="navProfileThumb" src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
+            </a>
+            <button type="button" class="btn-nav-logout nav-user-only" id="siteNavLogout">Logout</button>
+        </div>
+    </nav>
     <main class="page-shell">
-        <h1>Conversations</h1>
+        <h1>Messages</h1>
         <section id="conversationList" class="list-panel"></section>
         <p id="result" class="result"></p>
     </main>
     <script src="js/api.js"></script>
+    <script src="js/site-nav.js"></script>
     <script src="js/conversations.js"></script>
 </body>
 </html>

@@ -443,9 +443,15 @@
 
     if (btnCreate) {
         btnCreate.addEventListener('click', function() {
-            window.location.hash = 'create';
-            showView('add');
-            showMsg('', false);
+            refreshSessionUser().then(function() {
+                if (currentUserID == null) {
+                    window.location.href = loginUrlWithNext();
+                    return;
+                }
+                window.location.hash = 'create';
+                showView('add');
+                showMsg('', false);
+            });
         });
     }
     if (btnBack) {
@@ -532,8 +538,14 @@
                     photoPreview.removeAttribute('src');
                 }
                 showView('listings');
+                window.location.hash = '';
                 var q = searchInput && searchInput.value.trim();
                 fetchListings(q ? 'search?' + new URLSearchParams({ q: q }).toString() : 'items');
+                refreshSessionUser().then(function() {
+                    if (typeof window.refreshSiteNavAuth === 'function') {
+                        window.refreshSiteNavAuth();
+                    }
+                });
             }).catch(function(err) {
                 showMsg(err.message || 'Could not reach server.', true);
             }).finally(function() {
@@ -550,13 +562,27 @@
         return fetchListings('items');
     }).then(function() {
         if (window.location.hash === '#create') {
-            showView('add');
+            return refreshSessionUser().then(function() {
+                if (currentUserID == null) {
+                    window.location.href = loginUrlWithNext();
+                    window.location.hash = '';
+                    return;
+                }
+                showView('add');
+            });
         }
     });
 
     window.addEventListener('hashchange', function() {
         if (window.location.hash === '#create') {
-            showView('add');
+            refreshSessionUser().then(function() {
+                if (currentUserID == null) {
+                    window.location.href = loginUrlWithNext();
+                    window.location.hash = '';
+                    return;
+                }
+                showView('add');
+            });
         } else {
             showView('listings');
         }

@@ -135,6 +135,7 @@ public final class JsonUtil {
             + "\"itemTitle\":" + quote(summary.getItemTitle()) + ","
             + "\"otherUserID\":" + summary.getOtherUserID() + ","
             + "\"otherUserName\":" + quote(summary.getOtherUserName()) + ","
+            + "\"otherUserAvatarUrl\":" + quote(summary.getOtherUserPicture()) + ","
             + "\"lastMessage\":" + quote(summary.getLastMessage()) + ","
             + "\"lastMessageAt\":" + date(summary.getLastMessageAt()) + ","
             + "\"unreadCount\":" + summary.getUnreadCount()
@@ -150,6 +151,7 @@ public final class JsonUtil {
             + "\"conversationID\":" + message.getConversationID() + ","
             + "\"senderID\":" + message.getSenderID() + ","
             + "\"senderName\":" + quote(message.getSenderName()) + ","
+            + "\"senderAvatarUrl\":" + quote(message.getSenderProfilePicture()) + ","
             + "\"content\":" + quote(message.getContent()) + ","
             + "\"timestamp\":" + date(message.getTimestamp()) + ","
             + "\"read\":" + message.isRead()

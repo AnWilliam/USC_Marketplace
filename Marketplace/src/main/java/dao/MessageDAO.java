@@ -42,7 +42,7 @@ public class MessageDAO {
     }
 
     public List<Message> findByConversationId(int conversationID) throws SQLException {
-        String sql = "SELECT m.*, u.name AS senderName FROM Messages m JOIN Users u ON m.senderID = u.userID WHERE m.conversationID = ? ORDER BY m.timestamp ASC";
+        String sql = "SELECT m.*, u.name AS senderName, u.profile_picture AS senderProfilePicture FROM Messages m JOIN Users u ON m.senderID = u.userID WHERE m.conversationID = ? ORDER BY m.timestamp ASC";
         List<Message> messages = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -82,6 +82,11 @@ public class MessageDAO {
             message.setSenderName(senderName);
         } catch (SQLException e) {
             // Column not present; ignore to keep backward compatibility
+        }
+        try {
+            message.setSenderProfilePicture(rs.getString("senderProfilePicture"));
+        } catch (SQLException e) {
+            // Column not present
         }
         return message;
     }

@@ -6,22 +6,25 @@
     <title>Browse | USC Marketplace</title>
     <link rel="stylesheet" href="css/marketplace.css">
 </head>
-<body class="market-body">
-    <div id="listings-page">
-        <nav class="market-nav">
+<body class="market-body auth-unknown">
+    <nav class="market-nav">
             <a class="market-brand" href="items.html">
                 <span class="market-brand-mark">USC</span>
                 <span>Marketplace</span>
             </a>
             <div class="market-nav-actions">
-                <a class="nav-muted" href="conversations.html">Messages</a>
-                <button type="button" id="btnCreateListing" class="btn-create" aria-label="Create new listing">+ Create New Listing</button>
-                <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
-                    <img src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
+                <a class="nav-muted nav-always" href="items.html">Browse</a>
+                <a class="nav-muted nav-user-only" href="conversations.html">Messages</a>
+                <a class="nav-muted nav-guest-only" href="login.html">Login</a>
+                <a class="nav-muted nav-guest-only" href="register.html">Register</a>
+                <button type="button" id="btnCreateListing" class="btn-create nav-user-only" aria-label="Create new listing">+ Create New Listing</button>
+                <a class="icon-profile nav-user-only" href="profile.html" title="Profile" aria-label="Profile">
+                    <img id="navProfileThumb" src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
                 </a>
+                <button type="button" class="btn-nav-logout nav-user-only" id="siteNavLogout">Logout</button>
             </div>
         </nav>
-
+    <div id="listings-page">
         <div class="market-layout">
             <aside class="market-sidebar">
                 <input type="search" id="sidebarSearch" class="sidebar-search" placeholder="Search listings…" autocomplete="off">
@@ -53,18 +56,6 @@
     </div>
 
     <div id="add-listing-page" class="add-page page-hidden">
-        <nav class="market-nav">
-            <a class="market-brand" href="items.html">
-                <span class="market-brand-mark">USC</span>
-                <span>Marketplace</span>
-            </a>
-            <div class="market-nav-actions">
-                <a class="nav-muted" href="items.html">Browse</a>
-                <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
-                    <img src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
-                </a>
-            </div>
-        </nav>
 
         <button type="button" class="back-link" id="btnBackToListings">&larr; Back to Listings</button>
         <h1>Create New Listing</h1>
@@ -111,6 +102,7 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/site-nav.js"></script>
     <script src="js/marketplace.js"></script>
 </body>
 </html>

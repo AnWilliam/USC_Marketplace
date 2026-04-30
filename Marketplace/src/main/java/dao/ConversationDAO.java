@@ -79,6 +79,7 @@ public class ConversationDAO {
             "i.title AS itemTitle, " +
             "CASE WHEN c.buyerID = ? THEN c.sellerID ELSE c.buyerID END AS otherUserID, " +
             "u.name AS otherUserName, " +
+            "u.profile_picture AS otherUserPicture, " +
             "(SELECT m.content FROM Messages m " +
             " WHERE m.conversationID = c.conversationID " +
             " ORDER BY m.timestamp DESC LIMIT 1) AS lastMessage, " +
@@ -108,7 +109,7 @@ public class ConversationDAO {
                 while (rs.next()) {
                     Timestamp lastMessageAt = rs.getTimestamp("lastMessageAt");
 
-                    summaries.add(new ConversationSummary(
+                    ConversationSummary summary = new ConversationSummary(
                         rs.getInt("conversationID"),
                         rs.getInt("itemID"),
                         rs.getString("itemTitle"),
@@ -117,7 +118,9 @@ public class ConversationDAO {
                         rs.getString("lastMessage"),
                         lastMessageAt == null ? null : lastMessageAt.toLocalDateTime(),
                         rs.getInt("unreadCount")
-                    ));
+                    );
+                    summary.setOtherUserPicture(rs.getString("otherUserPicture"));
+                    summaries.add(summary);
                 }
             }
         }

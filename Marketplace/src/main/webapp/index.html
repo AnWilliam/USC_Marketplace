@@ -6,18 +6,22 @@
     <title>USC Marketplace</title>
     <link rel="stylesheet" href="css/marketplace.css">
 </head>
-<body class="market-body landing-body">
+<body class="market-body landing-body auth-unknown">
     <nav class="market-nav">
         <a class="market-brand" href="items.html">
             <span class="market-brand-mark">USC</span>
             <span>Marketplace</span>
         </a>
         <div class="market-nav-actions">
-            <a class="nav-muted" href="login.html">Login</a>
-            <a class="btn-create" href="items.html">Browse listings</a>
-            <a class="icon-profile" href="profile.html" title="Profile" aria-label="Profile">
-                <img src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
+            <a class="nav-muted nav-always" href="items.html">Browse</a>
+            <a class="nav-muted nav-user-only" href="conversations.html">Messages</a>
+            <a class="nav-muted nav-guest-only" href="login.html">Login</a>
+            <a class="nav-muted nav-guest-only" href="register.html">Register</a>
+            <a class="btn-create nav-user-only" href="items.html#create">Sell</a>
+            <a class="icon-profile nav-user-only" href="profile.html" title="Profile" aria-label="Profile">
+                <img id="navProfileThumb" src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
             </a>
+            <button type="button" class="btn-nav-logout nav-user-only" id="siteNavLogout">Logout</button>
         </div>
     </nav>
 
@@ -43,5 +47,7 @@
             <p>Listings load from the USC Marketplace server. Sign in to post items.</p>
         </section>
     </main>
+    <script src="js/api.js"></script>
+    <script src="js/site-nav.js"></script>
 </body>
 </html>

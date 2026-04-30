@@ -4,28 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | USC Marketplace</title>
+    <link rel="stylesheet" href="css/marketplace.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="items.html">USC Marketplace</a>
-        <nav>
-            <a href="items.html">Browse</a>
-            <a href="conversations.html">Messages</a>
-            <button type="button" id="logoutButton" class="button">Logout</button>
-        </nav>
-    </header>
+<body class="market-body auth-unknown">
+    <nav class="market-nav">
+        <a class="market-brand" href="items.html">
+            <span class="market-brand-mark">USC</span>
+            <span>Marketplace</span>
+        </a>
+        <div class="market-nav-actions">
+            <a class="nav-muted nav-always" href="items.html">Browse</a>
+            <a class="nav-muted nav-user-only" href="conversations.html">Messages</a>
+            <a class="nav-muted nav-guest-only" href="login.html">Login</a>
+            <a class="nav-muted nav-guest-only" href="register.html">Register</a>
+            <a class="icon-profile nav-user-only" href="profile.html" title="Profile" aria-label="Profile">
+                <img id="navProfileThumb" src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
+            </a>
+            <button type="button" class="btn-nav-logout nav-user-only" id="siteNavLogout">Logout</button>
+        </div>
+    </nav>
     <main class="form-page">
-        <form id="profileForm" class="panel">
+        <form id="profileForm" class="panel" novalidate>
             <h1>Profile</h1>
             <div id="profileSummary" class="summary"></div>
-            <label>Profile picture URL <input type="url" name="profilePicture"></label>
-            <label>Bio <textarea name="bio" rows="5"></textarea></label>
+            <img id="profilePhotoPreview" class="profile-photo-preview" alt="Profile preview">
+            <label>Profile photo
+                <input type="file" id="profilePhotoInput" accept="image/*">
+            </label>
+            <label>Or image URL
+                <input type="url" name="profilePicture" placeholder="https://…">
+            </label>
+            <label>Bio
+                <textarea name="bio" rows="5" placeholder="Tell buyers a bit about yourself"></textarea>
+            </label>
             <button type="submit" class="button primary">Save profile</button>
             <p id="result" class="result"></p>
         </form>
     </main>
     <script src="js/api.js"></script>
+    <script src="js/site-nav.js"></script>
     <script src="js/profile.js"></script>
 </body>
 </html>

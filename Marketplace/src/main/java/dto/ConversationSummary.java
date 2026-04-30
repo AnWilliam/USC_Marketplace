@@ -11,6 +11,7 @@ public class ConversationSummary {
     private String lastMessage;
     private LocalDateTime lastMessageAt;
     private int unreadCount;
+    private String otherUserPicture;
 
     public ConversationSummary(int conversationID, int itemID, String itemTitle,
                                int otherUserID, String otherUserName,
@@ -34,6 +35,9 @@ public class ConversationSummary {
     public String getLastMessage() { return lastMessage; }
     public LocalDateTime getLastMessageAt() { return lastMessageAt; }
     public int getUnreadCount() { return unreadCount; }
+
+    public String getOtherUserPicture() { return otherUserPicture; }
+    public void setOtherUserPicture(String otherUserPicture) { this.otherUserPicture = otherUserPicture; }
 
     public void setConversationID(int conversationID) { this.conversationID = conversationID; }
     public void setItemID(int itemID) { this.itemID = itemID; }

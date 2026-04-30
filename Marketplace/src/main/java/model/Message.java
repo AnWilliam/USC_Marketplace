@@ -9,7 +9,8 @@ public class Message {
     private String content;
     private LocalDateTime timestamp;
     private boolean read;
-    private String senderName; // new field
+    private String senderName;
+    private String senderProfilePicture;
 
     public Message() {
     }
@@ -78,5 +79,13 @@ public class Message {
 
     public void setSenderName(String senderName) {
         this.senderName = senderName;
+    }
+
+    public String getSenderProfilePicture() {
+        return senderProfilePicture;
+    }
+
+    public void setSenderProfilePicture(String senderProfilePicture) {
+        this.senderProfilePicture = senderProfilePicture;
     }
 }

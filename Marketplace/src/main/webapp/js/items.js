@@ -1,5 +1,17 @@
 var ITEM_IMAGE_PLACEHOLDER = 'images/usc-trojan-placeholder.svg';
 
+(function gateSellPage() {
+    var path = window.location.pathname || '';
+    if (!path.endsWith('sell.html')) {
+        return;
+    }
+    apiGet('profile').then(function(data) {
+        if (!data.success) {
+            window.location.href = loginUrlWithNext();
+        }
+    });
+})();
+
 function itemStoredPhoto(item) {
     var u = item.imageUrl || item.photoUrl || item.photo_path;
     return u != null && String(u).trim() !== '' ? String(u).trim() : null;
@@ -131,7 +143,7 @@ function loadItemDetail() {
         }
 
         var contactBtn = '';
-        if (item.status === 'AVAILABLE' && (currentUserID == null || Number(item.sellerID) !== Number(currentUserID))) {
+        if (item.status === 'AVAILABLE' && currentUserID != null && Number(item.sellerID) !== Number(currentUserID)) {
             contactBtn = '<button type="button" id="contactSeller" class="button primary">Contact seller</button>';
         }
 
