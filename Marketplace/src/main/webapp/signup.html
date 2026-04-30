@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Login - Marketplace</title>
+<title>Sign Up - Marketplace</title>
 <style>
     body {
         background-color: #fff8f0;
@@ -14,7 +14,7 @@
         align-items: center;
         height: 100vh;
     }
-    .login-container {
+    .signup-container {
         background: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.08);
@@ -57,34 +57,44 @@
     button[type="submit"]:hover {
         background-color: #7c0000;
     }
+    .login-link {
+        margin-top: 24px;
+        text-align: center;
+    }
+    .login-link a {
+        color: #990000;
+        font-weight: bold;
+        text-decoration: none;
+        margin-left: 8px;
+    }
 </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Log into Marketplace</h2>
-        <form id="loginForm">
+    <div class="signup-container">
+        <h2>Sign Up for Marketplace</h2>
+        <form id="signupForm">
             <label for="email">Email:</label><br>
             <input type="email" id="email" name="email" required><br>
             <label for="password">Password:</label><br>
             <input type="password" id="password" name="password" required><br>
-            <button type="submit">Login</button>
+            <button type="submit">Sign Up</button>
         </form>
-        <div id="loginMessage" style="margin-top:16px;text-align:center;color:#990000;"></div>
-        <div style="margin-top:24px;text-align:center;">
-            <span>Don't have an account?</span>
-            <a href="signup.html" style="color:#990000;font-weight:bold;text-decoration:none;margin-left:8px;">Sign up</a>
+        <div id="signupMessage" style="margin-top:16px;text-align:center;color:#990000;"></div>
+        <div class="login-link">
+            <span>Already have an account?</span>
+            <a href="login.html">Log in</a>
         </div>
     </div>
     <script>
-// Handle login form submission with fetch to /api/login
-const loginForm = document.getElementById('loginForm');
-const loginMessage = document.getElementById('loginMessage');
-loginForm.addEventListener('submit', async function(event) {
+// Handle sign up form submission with fetch to /api/signup
+const signupForm = document.getElementById('signupForm');
+const signupMessage = document.getElementById('signupMessage');
+signupForm.addEventListener('submit', async function(event) {
     event.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     try {
-        const response = await fetch('/api/login', {
+        const response = await fetch('/api/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -92,17 +102,19 @@ loginForm.addEventListener('submit', async function(event) {
             body: JSON.stringify({ email, password })
         });
         if (response.ok) {
-            loginMessage.style.color = '#228B22';
-            loginMessage.textContent = 'Login successful!';
-            // Redirect or further logic here
+            signupMessage.style.color = '#228B22';
+            signupMessage.textContent = 'Sign up successful! Redirecting to login...';
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
         } else {
             const data = await response.json().catch(() => ({}));
-            loginMessage.style.color = '#990000';
-            loginMessage.textContent = data.message || 'Login failed. Please check your credentials.';
+            signupMessage.style.color = '#990000';
+            signupMessage.textContent = data.message || 'Sign up failed. Please try again.';
         }
     } catch (error) {
-        loginMessage.style.color = '#990000';
-        loginMessage.textContent = 'An error occurred. Please try again.';
+        signupMessage.style.color = '#990000';
+        signupMessage.textContent = 'An error occurred. Please try again.';
     }
 });
 </script>

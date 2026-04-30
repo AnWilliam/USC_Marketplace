@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Marketplace - Guest View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', Arial, sans-serif;
+        background: #fff8f0;
+        color: #222;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .header {
+        display: flex;
+        align-items: center;
+        background: #990000;
+        color: #fff;
+        padding: 0 24px;
+        height: 64px;
+        justify-content: space-between;
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    .marketplace-title {
+        font-size: 1.7em;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .signin-btn {
+        background: #fff;
+        color: #990000;
+        border: 2px solid #990000;
+        border-radius: 4px;
+        padding: 8px 18px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .signin-btn:hover {
+        background: #990000;
+        color: #fff;
+    }
+    .main-content {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+    }
+    .sidebar {
+        width: 220px;
+        background: #f5e6d0;
+        padding: 24px 0 0 0;
+        border-right: 2px solid #990000;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .sidebar h3 {
+        color: #990000;
+        margin: 0 0 16px 24px;
+        font-size: 1.1em;
+    }
+    .category-list {
+        list-style: none;
+        padding: 0 0 0 24px;
+        margin: 0;
+    }
+    .category-list li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        color: #990000;
+        font-weight: 500;
+        transition: color 0.2s, background 0.2s, border 0.2s;
+        border: 2px solid #990000;
+        border-radius: 6px;
+        padding: 8px 16px;
+        background: #fff;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .category-list li:hover, .category-list li.active {
+        background: #990000;
+        color: #fff;
+    }
+    .center-panel {
+        flex: 1;
+        padding: 32px 40px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .welcome {
+        font-size: 1.3em;
+        margin-bottom: 24px;
+        color: #990000;
+        font-weight: bold;
+    }
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 24px;
+    }
+    .item-card {
+        background: #fff;
+        border: 1.5px solid #990000;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    .item-card img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        background: #f5e6d0;
+    }
+    .item-name {
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 6px;
+        color: #990000;
+    }
+    .item-price {
+        color: #222;
+        font-size: 1em;
+        margin-bottom: 4px;
+    }
+    .chat-fab {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <span class="marketplace-title">Marketplace</span>
+        </div>
+        <div class="header-right">
+            <button class="signin-btn" onclick="window.location.href='login.html'">Sign In</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <aside class="sidebar">
+            <h3>Categories</h3>
+            <ul class="category-list">
+                <li>Under $25</li>
+                <li>Under $50</li>
+                <li>Under $100</li>
+                <li>Clothing</li>
+                <li>Accessories</li>
+                <li>Electronics</li>
+                <li>Sports</li>
+                <li>School Supplies</li>
+            </ul>
+        </aside>
+        <main class="center-panel">
+            <div class="welcome">Welcome shopper</div>
+            <div class="items-grid" id="itemsGrid">
+                <!-- Example item cards -->
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80" alt="Item">
+                    <div class="item-name">USC Hoodie</div>
+                    <div class="item-price">$35</div>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Item">
+                    <div class="item-name">Laptop</div>
+                    <div class="item-price">$400</div>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Item">
+                    <div class="item-name">Backpack</div>
+                    <div class="item-price">$20</div>
+                </div>
+                <!-- More items can be dynamically loaded here -->
+            </div>
+        </main>
+    </div>
+    <script>
+    // Fetch and render items from backend
+    async function fetchItems(filter = null) {
+        const itemsGrid = document.getElementById('itemsGrid');
+        itemsGrid.innerHTML = '<div>Loading items...</div>';
+        let url = '/api/items';
+        if (filter) {
+            url += '?filter=' + encodeURIComponent(filter);
+        }
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch items');
+            const items = await response.json();
+            if (!Array.isArray(items) || items.length === 0) {
+                itemsGrid.innerHTML = '<div>No items found.</div>';
+                return;
+            }
+            itemsGrid.innerHTML = '';
+            for (const item of items) {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <img src="${item.image || 'https://via.placeholder.com/120'}" alt="Item">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">$${item.price}</div>
+                `;
+                // For guest, no click event
+                itemsGrid.appendChild(card);
+            }
+        } catch (err) {
+            itemsGrid.innerHTML = `<div style='color:#990000;'>Error: ${err.message}</div>`;
+        }
+    }
+    // Filtering
+    document.querySelectorAll('.category-list li').forEach(li => {
+        li.addEventListener('click', () => {
+            fetchItems(li.textContent);
+        });
+    });
+    // Initial load
+    fetchItems();
+    </script>
+</body>
+</html>
