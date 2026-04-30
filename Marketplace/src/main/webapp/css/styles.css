@@ -200,6 +200,17 @@ input, select, textarea {
     color: var(--muted);
 }
 
+.unread-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
 @media (max-width: 720px) {
     .topbar, .toolbar {
         align-items: flex-start;

@@ -13,6 +13,7 @@ import model.Conversation;
 import service.ConversationService;
 import util.JsonUtil;
 import util.SessionUtil;
+import dto.ConversationSummary;
 
 @MultipartConfig
 public class ConversationServlet extends HttpServlet {
@@ -48,9 +49,9 @@ public class ConversationServlet extends HttpServlet {
         }
 
         try {
-            List<Conversation> conversations = conversationService.getConversationsForUser(userID);
-            JsonUtil.writeJson(response, HttpServletResponse.SC_OK,
-                "{\"success\":true,\"data\":" + conversationsToJson(conversations) + "}");
+        	List<ConversationSummary> conversations = conversationService.getConversationSummariesForUser(userID);
+        	JsonUtil.writeJson(response, HttpServletResponse.SC_OK,
+        	    "{\"success\":true,\"data\":" + conversationSummariesToJson(conversations) + "}");
         } catch (IllegalArgumentException e) {
             JsonUtil.writeError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (SQLException e) {
@@ -58,13 +59,13 @@ public class ConversationServlet extends HttpServlet {
         }
     }
 
-    private String conversationsToJson(List<Conversation> conversations) {
+    private String conversationSummariesToJson(List<ConversationSummary> conversations) {
         StringBuilder json = new StringBuilder("[");
         for (int i = 0; i < conversations.size(); i++) {
             if (i > 0) {
                 json.append(',');
             }
-            json.append(JsonUtil.conversationToJson(conversations.get(i)));
+            json.append(JsonUtil.conversationSummaryToJson(conversations.get(i)));
         }
         json.append(']');
         return json.toString();
