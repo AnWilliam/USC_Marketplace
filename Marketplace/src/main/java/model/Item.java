@@ -10,6 +10,7 @@ public class Item {
     private String title;
     private String description;
     private String itemCondition;
+    private String photoPath;
     private BigDecimal price;
     private String status;
     private LocalDateTime dateListed;
@@ -77,6 +78,14 @@ public class Item {
 
     public void setItemCondition(String itemCondition) {
         this.itemCondition = itemCondition;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 
     public BigDecimal getPrice() {
