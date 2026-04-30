@@ -15,6 +15,7 @@ public class Item {
     private LocalDateTime dateListed;
     private String sellerName;
     private String categoryName;
+    private String imageUrl; // new field
 
     public Item() {
     }
@@ -118,4 +119,7 @@ public class Item {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

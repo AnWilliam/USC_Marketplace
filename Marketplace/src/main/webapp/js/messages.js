@@ -34,17 +34,38 @@ function loadMessages() {
             showResult(data.message, true);
             return;
         }
-        var html = data.data.map(function(message) {
-            return ''
-                + '<div class="message">'
-                + '<strong>' + (message.senderName || ('User #' + message.senderID)) + '</strong>'
-                + '<p>' + escapeHtml(message.content) + '</p>'
-                + '<small>' + escapeHtml(formatTime(message.timestamp)) + '</small>'
-                + '</div>';
-        }).join('');
-        messageList.innerHTML = html || '<p>No messages yet.</p>';
+		var html = data.data.map(function(message) {
+		    var receipt = message.read ? 'Read' : 'Delivered';
+
+		    return ''
+		        + '<div class="message">'
+		        + '<strong>' + escapeHtml(message.senderName || ('User #' + message.senderID)) + '</strong>'
+		        + '<p>' + escapeHtml(message.content) + '</p>'
+		        + '<small>' + escapeHtml(formatTime(message.timestamp)) + ' • ' + receipt + '</small>'
+		        + '</div>';
+		}).join('');
+		messageList.innerHTML = html || '<p>No messages yet.</p>';
+		markConversationAsRead();
     });
 }
+
+function markConversationAsRead() {
+    if (!conversationID) {
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append('conversationID', conversationID);
+    formData.append('action', 'markAsRead');
+
+    apiPost('messages', formData).then(function(data) {
+        if (!data.success) {
+            console.error(data.message || 'Could not mark messages as read.');
+        }
+    });
+}
+
+
 
 if (messageForm) {
     messageForm.addEventListener('submit', function(event) {

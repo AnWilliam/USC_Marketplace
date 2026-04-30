@@ -15,13 +15,13 @@ import util.DBUtil;
 public class ItemDAO {
     private static final String ITEM_SELECT_BASE = ""
         + "SELECT i.itemID, i.sellerID, i.categoryID, i.title, i.description, i.item_condition, i.price, i.status, i.date_listed, "
-        + "u.name AS sellerName, c.categoryName AS categoryName "
+        + "u.name AS sellerName, c.categoryName AS categoryName, i.image_url AS imageUrl "
         + "FROM Items i "
         + "JOIN Users u ON i.sellerID = u.userID "
         + "JOIN Categories c ON i.categoryID = c.categoryID ";
 
     public int create(Item item) throws SQLException {
-        String sql = "INSERT INTO Items (sellerID, categoryID, title, description, item_condition, price, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Items (sellerID, categoryID, title, description, item_condition, price, status, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, item.getSellerID());
@@ -31,6 +31,7 @@ public class ItemDAO {
             stmt.setString(5, item.getItemCondition());
             stmt.setBigDecimal(6, item.getPrice());
             stmt.setString(7, item.getStatus());
+            stmt.setString(8, item.getImageUrl());
             stmt.executeUpdate();
             try (ResultSet keys = stmt.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -122,6 +123,7 @@ public class ItemDAO {
         );
         item.setSellerName(rs.getString("sellerName"));
         item.setCategoryName(rs.getString("categoryName"));
+        item.setImageUrl(rs.getString("imageUrl"));
         return item;
     }
 }

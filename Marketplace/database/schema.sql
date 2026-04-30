@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Items (
     item_condition VARCHAR(32) NULL,
     price DECIMAL(10, 2) NOT NULL,
     status ENUM('AVAILABLE', 'SOLD', 'PENDING') NOT NULL DEFAULT 'AVAILABLE',
+    image_url MEDIUMTEXT,
     date_listed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_items_seller FOREIGN KEY (sellerID) REFERENCES Users(userID) ON DELETE CASCADE,
     CONSTRAINT fk_items_category FOREIGN KEY (categoryID) REFERENCES Categories(categoryID),

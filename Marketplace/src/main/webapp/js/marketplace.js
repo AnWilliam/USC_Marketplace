@@ -410,6 +410,9 @@
             fd.append('categoryID', categoryID);
             fd.append('description', desc);
             fd.append('itemCondition', itemCondition);
+            if (photoPreview && photoPreview.src) {
+                fd.append('imageUrl', photoPreview.src);
+            }
 
             apiPost('items', fd).then(function(data) {
                 if (!data.success) {
