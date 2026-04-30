@@ -7,6 +7,7 @@ import dao.ConversationDAO;
 import dao.ItemDAO;
 import model.Conversation;
 import model.Item;
+import dto.ConversationSummary;
 
 public class ConversationService {
     private final ConversationDAO conversationDAO;
@@ -45,6 +46,10 @@ public class ConversationService {
 
     public List<Conversation> getConversationsForUser(int userID) throws SQLException {
         return conversationDAO.findByUser(userID);
+    }
+    
+    public List<ConversationSummary> getConversationSummariesForUser(int userID) throws SQLException {
+        return conversationDAO.findSummariesByUser(userID);
     }
 
     public Conversation getConversation(int conversationID, int userID) throws SQLException {

@@ -11,6 +11,7 @@ import java.util.List;
 
 import model.Conversation;
 import util.DBUtil;
+import dto.ConversationSummary;
 
 public class ConversationDAO {
     public int create(Conversation conversation) throws SQLException {
@@ -69,6 +70,61 @@ public class ConversationDAO {
         }
         return conversations;
     }
+    
+    public List<ConversationSummary> findSummariesByUser(int userID) throws SQLException {
+        String sql =
+            "SELECT " +
+            "c.conversationID, " +
+            "c.itemID, " +
+            "i.title AS itemTitle, " +
+            "CASE WHEN c.buyerID = ? THEN c.sellerID ELSE c.buyerID END AS otherUserID, " +
+            "u.name AS otherUserName, " +
+            "(SELECT m.content FROM Messages m " +
+            " WHERE m.conversationID = c.conversationID " +
+            " ORDER BY m.timestamp DESC LIMIT 1) AS lastMessage, " +
+            "COALESCE(c.last_message_at, c.created_at) AS lastMessageAt, " +
+            "(SELECT COUNT(*) FROM Messages unread " +
+            " WHERE unread.conversationID = c.conversationID " +
+            " AND unread.senderID <> ? " +
+            " AND unread.is_read = FALSE) AS unreadCount " +
+            "FROM Conversations c " +
+            "JOIN Items i ON c.itemID = i.itemID " +
+            "JOIN Users u ON u.userID = CASE WHEN c.buyerID = ? THEN c.sellerID ELSE c.buyerID END " +
+            "WHERE c.buyerID = ? OR c.sellerID = ? " +
+            "ORDER BY COALESCE(c.last_message_at, c.created_at) DESC";
+
+        List<ConversationSummary> summaries = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userID);
+            stmt.setInt(2, userID);
+            stmt.setInt(3, userID);
+            stmt.setInt(4, userID);
+            stmt.setInt(5, userID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Timestamp lastMessageAt = rs.getTimestamp("lastMessageAt");
+
+                    summaries.add(new ConversationSummary(
+                        rs.getInt("conversationID"),
+                        rs.getInt("itemID"),
+                        rs.getString("itemTitle"),
+                        rs.getInt("otherUserID"),
+                        rs.getString("otherUserName"),
+                        rs.getString("lastMessage"),
+                        lastMessageAt == null ? null : lastMessageAt.toLocalDateTime(),
+                        rs.getInt("unreadCount")
+                    ));
+                }
+            }
+        }
+
+        return summaries;
+    }
+    
 
     public boolean updateLastMessageAt(int conversationID) throws SQLException {
         String sql = "UPDATE Conversations SET last_message_at = CURRENT_TIMESTAMP WHERE conversationID = ?";
