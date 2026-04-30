@@ -64,8 +64,9 @@ public class ItemServlet extends HttpServlet {
             String description = request.getParameter("description");
             String itemCondition = request.getParameter("itemCondition");
             BigDecimal price = new BigDecimal(request.getParameter("price"));
+            String imageUrl = request.getParameter("imageUrl");
 
-            Item item = itemService.createItem(userID, categoryID, title, description, price, itemCondition);
+            Item item = itemService.createItem(userID, categoryID, title, description, price, itemCondition, imageUrl);
             JsonUtil.writeJson(response, HttpServletResponse.SC_CREATED,
                 "{\"success\":true,\"message\":\"Item created.\",\"data\":" + JsonUtil.itemToJson(item) + "}");
         } catch (IllegalArgumentException e) {

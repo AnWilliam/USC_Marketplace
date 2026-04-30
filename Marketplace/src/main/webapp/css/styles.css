@@ -211,6 +211,16 @@ input, select, textarea {
     margin-bottom: 8px;
 }
 
+/* avatar thumbnails next to user names */
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 8px;
+    object-fit: cover;
+}
+
 @media (max-width: 720px) {
     .topbar, .toolbar {
         align-items: flex-start;

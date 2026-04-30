@@ -94,7 +94,8 @@ public final class JsonUtil {
             + "\"status\":" + quote(item.getStatus()) + ","
             + "\"dateListed\":" + date(item.getDateListed()) + ","
             + "\"sellerName\":" + quote(item.getSellerName()) + ","
-            + "\"categoryName\":" + quote(item.getCategoryName())
+            + "\"categoryName\":" + quote(item.getCategoryName()) + ","
+            + "\"imageUrl\":" + quote(item.getImageUrl())
             + "}";
     }
 
