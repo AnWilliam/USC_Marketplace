@@ -105,5 +105,19 @@
     <script src="js/api.js"></script>
     <script src="js/site-nav.js"></script>
     <script src="js/marketplace.js"></script>
+    <script>
+    // Dynamically load chat popup HTML and JS
+    (function() {
+        fetch('chat-popup.html').then(function(resp) { return resp.text(); }).then(function(html) {
+            var temp = document.createElement('div');
+            temp.innerHTML = html;
+            document.body.appendChild(temp.firstElementChild); // chatPopup
+            document.body.appendChild(temp.querySelector('#chatPopupOpen'));
+            var script = document.createElement('script');
+            script.src = 'js/messages.js';
+            document.body.appendChild(script);
+        });
+    })();
+    </script>
 </body>
 </html>

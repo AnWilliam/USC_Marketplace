@@ -104,4 +104,49 @@ if (messageForm) {
     });
 }
 
+// Chat Popup logic
+function initChatPopup() {
+    var chatPopup = document.getElementById('chatPopup');
+    var chatPopupOpen = document.getElementById('chatPopupOpen');
+    var chatPopupClose = document.getElementById('chatPopupClose');
+    var messageList = document.getElementById('messageList');
+    var messageForm = document.getElementById('messageForm');
+    var result = document.getElementById('result');
+
+    if (!chatPopup || !chatPopupOpen || !chatPopupClose) return;
+
+    chatPopupOpen.addEventListener('click', function() {
+        chatPopup.classList.remove('closed');
+        // Optionally, load messages here
+        if (typeof loadMessages === 'function') loadMessages();
+    });
+    chatPopupClose.addEventListener('click', function() {
+        chatPopup.classList.add('closed');
+    });
+
+    // Optionally, close popup on outside click
+    document.addEventListener('mousedown', function(e) {
+        if (!chatPopup.classList.contains('closed') && !chatPopup.contains(e.target) && !chatPopupOpen.contains(e.target)) {
+            chatPopup.classList.add('closed');
+        }
+    });
+
+    // Prevent form submission if not in a conversation
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(e) {
+            if (!window.conversationID) {
+                e.preventDefault();
+                result.textContent = 'Please select a conversation.';
+            }
+        });
+    }
+}
+
+// Initialize chat popup after DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChatPopup);
+} else {
+    initChatPopup();
+}
+
 loadMessages();
