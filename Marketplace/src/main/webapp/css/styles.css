@@ -325,6 +325,9 @@ input, select, textarea {
     font-weight: 700;
     margin-bottom: 8px;
 }
+.hidden {
+  display: none !important;
+}
 
 @media (max-width: 720px) {
     .topbar, .toolbar {
