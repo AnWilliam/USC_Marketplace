@@ -1,4 +1,5 @@
 var ITEM_IMAGE_PLACEHOLDER = 'images/usc-trojan-placeholder.svg';
+
 function toggleWishlist(itemID, isInWishlist) {
     if (currentUserID == null) {
         window.location.href = loginUrlWithNext();
@@ -11,7 +12,9 @@ function toggleWishlist(itemID, isInWishlist) {
         ? fetch(url, { method: 'DELETE' })
         : fetch(url, { method: 'POST' });
 
-    req.then(res => res.json()).then(data => {
+    req.then(function(res) {
+        return res.json();
+    }).then(function(data) {
         if (!data.success) {
             showResult(data.message, true);
             return;
@@ -22,8 +25,8 @@ function toggleWishlist(itemID, isInWishlist) {
 
 function updateWishlistStar(itemID) {
     fetch('wishlist/check?itemID=' + encodeURIComponent(itemID))
-        .then(res => res.json())
-        .then(data => {
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
             var btn = document.getElementById('wishlistToggle');
             if (!btn) return;
 
@@ -36,11 +39,11 @@ function updateWishlistStar(itemID) {
             }
         });
 }
+
 (function gateSellPage() {
     var path = window.location.pathname || '';
-    if (!path.endsWith('sell.html')) {
-        return;
-    }
+    if (!path.endsWith('sell.html')) return;
+
     apiGet('profile').then(function(data) {
         if (!data.success) {
             window.location.href = loginUrlWithNext();
@@ -50,7 +53,7 @@ function updateWishlistStar(itemID) {
 
 function itemStoredPhoto(item) {
     var u = item.imageUrl || item.photoUrl || item.photo_path;
-    return u != null && String(u).trim() !== '' ? String(u).trim() : null;
+    return u && String(u).trim() !== '' ? String(u).trim() : null;
 }
 
 var itemsList = document.getElementById('itemsList');
@@ -78,45 +81,46 @@ function updateItemStatus(itemID, status) {
 }
 
 function bindItemsListOwnerActions() {
-    if (!itemsList || itemsList.dataset.ownerBound === '1') {
-        return;
-    }
+    if (!itemsList || itemsList.dataset.ownerBound === '1') return;
+
     itemsList.dataset.ownerBound = '1';
+
     itemsList.addEventListener('click', function(event) {
         var btn = event.target.closest('[data-owner-action]');
-        if (!btn) {
-            return;
-        }
+        if (!btn) return;
+
         event.preventDefault();
         event.stopPropagation();
+
         var itemID = parseInt(btn.getAttribute('data-item-id'), 10);
         var action = btn.getAttribute('data-owner-action');
-        if (action === 'withdraw' && !window.confirm('Remove this listing from the marketplace?')) {
-            return;
-        }
+
+        if (action === 'withdraw' && !window.confirm('Remove this listing from the marketplace?')) return;
+
         var status = action === 'sold' ? 'SOLD' : 'WITHDRAWN';
+
         updateItemStatus(itemID, status).then(function(data) {
             showResult(data.message, !data.success);
-            if (data.success) {
-                loadItems(lastItemsUrl);
-            }
+            if (data.success) loadItems(lastItemsUrl);
         });
     });
 }
 
 function loadItems(url) {
-    if (!itemsList) {
-        return;
-    }
+    if (!itemsList) return;
+
     var u = url || 'items';
     lastItemsUrl = u;
+
     apiGet(u).then(function(data) {
         if (!data.success) {
             showResult(data.message, true);
             return;
         }
+
         var html = data.data.map(renderItemCard).join('');
         itemsList.innerHTML = html || '<p>No available items yet.</p>';
+
         bindItemsListOwnerActions();
     });
 }
@@ -125,16 +129,20 @@ function renderItemCard(item) {
     var stored = itemStoredPhoto(item);
     var thumb = stored || ITEM_IMAGE_PLACEHOLDER;
     var thumbClass = 'item-card-thumb' + (stored ? ' item-card-thumb-photo' : '');
+
     var ownerBar = '';
     var wrapClass = 'item-card';
+
     if (currentUserID != null && Number(item.sellerID) === Number(currentUserID) && item.status === 'AVAILABLE') {
         wrapClass += ' item-card-owner-wrap';
+
         ownerBar = ''
             + '<div class="item-card-list-owner-actions">'
             + '<button type="button" class="btn-mark-sold-list" data-owner-action="sold" data-item-id="' + item.itemID + '">Mark sold</button>'
-            + '<button type="button" class="btn-remove-listing-list" data-owner-action="withdraw" data-item-id="' + item.itemID + '" title="Remove listing" aria-label="Remove listing">&times;</button>'
+            + '<button type="button" class="btn-remove-listing-list" data-owner-action="withdraw" data-item-id="' + item.itemID + '">&times;</button>'
             + '</div>';
     }
+
     return ''
         + '<article class="' + wrapClass + '">'
         + ownerBar
@@ -147,19 +155,19 @@ function renderItemCard(item) {
 }
 
 function loadItemDetail() {
-    if (!itemDetail) {
-        return;
-    }
+    if (!itemDetail) return;
+
     var id = getQueryParam('id');
-    if (!id) {
-        return;
-    }
+    if (!id) return;
+
     apiGet('items?id=' + encodeURIComponent(id)).then(function(data) {
         if (!data.success) {
             showResult(data.message, true);
             return;
         }
+
         var item = data.data;
+
         var storedHero = itemStoredPhoto(item);
         var hero = storedHero || ITEM_IMAGE_PLACEHOLDER;
         var heroFigureClass = 'item-detail-hero' + (storedHero ? ' item-detail-has-photo' : '');
@@ -174,7 +182,7 @@ function loadItemDetail() {
             ownerBar = ''
                 + '<div class="item-detail-owner-actions">'
                 + '<button type="button" id="detailMarkSold" class="button">Mark sold</button>'
-                + '<button type="button" id="detailRemoveListing" class="button btn-remove-detail" title="Remove listing" aria-label="Remove listing">&times;</button>'
+                + '<button type="button" id="detailRemoveListing" class="button btn-remove-detail">&times;</button>'
                 + '</div>';
         }
 
@@ -183,28 +191,41 @@ function loadItemDetail() {
             contactBtn = '<button type="button" id="contactSeller" class="button primary">Contact seller</button>';
         }
 
-		itemDetail.innerHTML = ''
-		    + '<figure class="' + heroFigureClass + '"><img src="' + escapeHtml(hero) + '" alt=""></figure>'
-		    + notice
-		    + '<h1>' + escapeHtml(item.title) + '</h1>'
+        var wishlistBtnHtml = '';
+        if (currentUserID != null && Number(item.sellerID) !== Number(currentUserID)) {
+            wishlistBtnHtml = '<button type="button" id="wishlistToggle" class="button"></button>';
+        }
 
-		    + '<button type="button" id="wishlistToggle" class="button"></button>'
+        itemDetail.innerHTML = ''
+            + '<figure class="' + heroFigureClass + '"><img src="' + escapeHtml(hero) + '" alt=""></figure>'
+            + notice
+            + '<h1>' + escapeHtml(item.title) + '</h1>'
+            + wishlistBtnHtml
+            + '<p class="price">' + money(item.price) + '</p>'
+            + '<p>' + escapeHtml(item.description || '') + '</p>'
+            + '<p>Status: ' + escapeHtml(item.status) + '</p>'
+            + ownerBar
+            + contactBtn;
 
-		    + '<p class="price">' + money(item.price) + '</p>'
-		    + '<p>' + escapeHtml(item.description || '') + '</p>'
-		    + '<p>Status: ' + escapeHtml(item.status) + '</p>'
-		    + ownerBar
-		    + contactBtn;
-			var wishlistBtn = document.getElementById('wishlistToggle');
+        var wishlistBtnEl = document.getElementById('wishlistToggle');
 
-			if (wishlistBtn) {
-			    updateWishlistStar(item.itemID);
+        if (wishlistBtnEl) {
+            updateWishlistStar(item.itemID);
 
-			    wishlistBtn.addEventListener('click', function () {
-			        var isInWishlist = wishlistBtn.dataset.inWishlist === 'true';
-			        toggleWishlist(item.itemID, isInWishlist);
-			    });
-			}
+            wishlistBtnEl.addEventListener('click', function () {
+                if (Number(item.sellerID) === Number(currentUserID)) return;
+
+                wishlistBtnEl.disabled = true;
+
+                var isInWishlist = wishlistBtnEl.dataset.inWishlist === 'true';
+                toggleWishlist(item.itemID, isInWishlist);
+
+                setTimeout(function () {
+                    wishlistBtnEl.disabled = false;
+                }, 300);
+            });
+        }
+
         var contactSellerEl = document.getElementById('contactSeller');
         if (contactSellerEl) {
             contactSellerEl.addEventListener('click', function() {
@@ -212,13 +233,11 @@ function loadItemDetail() {
                     window.location.href = loginUrlWithNext();
                     return;
                 }
+
                 var formData = new FormData();
                 formData.append('itemID', item.itemID);
+
                 apiPost('conversations', formData).then(function(result) {
-                    if (!result.success && result.message && String(result.message).toLowerCase().indexOf('log in') !== -1) {
-                        window.location.href = loginUrlWithNext();
-                        return;
-                    }
                     showResult(result.message, !result.success);
                     if (result.success) {
                         window.location.href = 'messages.html?conversationID=' + result.data.conversationID;
@@ -232,9 +251,7 @@ function loadItemDetail() {
             markSoldEl.addEventListener('click', function() {
                 updateItemStatus(item.itemID, 'SOLD').then(function(result) {
                     showResult(result.message, !result.success);
-                    if (result.success) {
-                        window.location.reload();
-                    }
+                    if (result.success) window.location.reload();
                 });
             });
         }
@@ -242,14 +259,11 @@ function loadItemDetail() {
         var removeEl = document.getElementById('detailRemoveListing');
         if (removeEl) {
             removeEl.addEventListener('click', function() {
-                if (!window.confirm('Remove this listing from the marketplace?')) {
-                    return;
-                }
+                if (!window.confirm('Remove this listing from the marketplace?')) return;
+
                 updateItemStatus(item.itemID, 'WITHDRAWN').then(function(result) {
                     showResult(result.message, !result.success);
-                    if (result.success) {
-                        window.location.reload();
-                    }
+                    if (result.success) window.location.reload();
                 });
             });
         }
@@ -258,16 +272,16 @@ function loadItemDetail() {
 
 if (itemForm) {
     var itemFormSubmitting = false;
+
     itemForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        if (itemFormSubmitting) {
-            return;
-        }
+        if (itemFormSubmitting) return;
+
         var publishBtn = itemForm.querySelector('button[type="submit"]');
         itemFormSubmitting = true;
-        if (publishBtn) {
-            publishBtn.disabled = true;
-        }
+
+        if (publishBtn) publishBtn.disabled = true;
+
         apiPost('items', new FormData(itemForm)).then(function(data) {
             showResult(data.message, !data.success);
             if (data.success) {
@@ -275,9 +289,7 @@ if (itemForm) {
             }
         }).finally(function() {
             itemFormSubmitting = false;
-            if (publishBtn) {
-                publishBtn.disabled = false;
-            }
+            if (publishBtn) publishBtn.disabled = false;
         });
     });
 }
