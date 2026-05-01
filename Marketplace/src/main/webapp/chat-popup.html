@@ -1,0 +1,17 @@
+<!-- Chat Popup Widget -->
+<div id="chatPopup" class="chat-popup closed">
+    <div class="chat-popup-header">
+        <span>Messages</span>
+        <button id="chatPopupClose" title="Close">&times;</button>
+    </div>
+    <section id="messageList" class="message-list"></section>
+    <form id="messageForm" class="message-form">
+        <input type="text" name="content" placeholder="Type a message" required>
+        <button type="submit" class="button primary">Send</button>
+    </form>
+    <p id="result" class="result"></p>
+</div>
+<!-- Floating Chat Button -->
+<button id="chatPopupOpen" class="chat-popup-open" title="Open chat">
+    <img src="images/icon-profile.svg" alt="Chat" width="32" height="32">
+</button>
