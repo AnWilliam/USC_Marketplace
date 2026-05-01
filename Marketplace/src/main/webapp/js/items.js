@@ -1,5 +1,41 @@
 var ITEM_IMAGE_PLACEHOLDER = 'images/usc-trojan-placeholder.svg';
+function toggleWishlist(itemID, isInWishlist) {
+    if (currentUserID == null) {
+        window.location.href = loginUrlWithNext();
+        return;
+    }
 
+    var url = 'wishlist?itemID=' + encodeURIComponent(itemID);
+
+    var req = isInWishlist
+        ? fetch(url, { method: 'DELETE' })
+        : fetch(url, { method: 'POST' });
+
+    req.then(res => res.json()).then(data => {
+        if (!data.success) {
+            showResult(data.message, true);
+            return;
+        }
+        updateWishlistStar(itemID);
+    });
+}
+
+function updateWishlistStar(itemID) {
+    fetch('wishlist/check?itemID=' + encodeURIComponent(itemID))
+        .then(res => res.json())
+        .then(data => {
+            var btn = document.getElementById('wishlistToggle');
+            if (!btn) return;
+
+            if (data.inWishlist) {
+                btn.textContent = '★ Remove from wishlist';
+                btn.dataset.inWishlist = 'true';
+            } else {
+                btn.textContent = '☆ Add to wishlist';
+                btn.dataset.inWishlist = 'false';
+            }
+        });
+}
 (function gateSellPage() {
     var path = window.location.pathname || '';
     if (!path.endsWith('sell.html')) {
@@ -147,16 +183,28 @@ function loadItemDetail() {
             contactBtn = '<button type="button" id="contactSeller" class="button primary">Contact seller</button>';
         }
 
-        itemDetail.innerHTML = ''
-            + '<figure class="' + heroFigureClass + '"><img src="' + escapeHtml(hero) + '" alt=""></figure>'
-            + notice
-            + '<h1>' + escapeHtml(item.title) + '</h1>'
-            + '<p class="price">' + money(item.price) + '</p>'
-            + '<p>' + escapeHtml(item.description || '') + '</p>'
-            + '<p>Status: ' + escapeHtml(item.status) + '</p>'
-            + ownerBar
-            + contactBtn;
+		itemDetail.innerHTML = ''
+		    + '<figure class="' + heroFigureClass + '"><img src="' + escapeHtml(hero) + '" alt=""></figure>'
+		    + notice
+		    + '<h1>' + escapeHtml(item.title) + '</h1>'
 
+		    + '<button type="button" id="wishlistToggle" class="button"></button>'
+
+		    + '<p class="price">' + money(item.price) + '</p>'
+		    + '<p>' + escapeHtml(item.description || '') + '</p>'
+		    + '<p>Status: ' + escapeHtml(item.status) + '</p>'
+		    + ownerBar
+		    + contactBtn;
+			var wishlistBtn = document.getElementById('wishlistToggle');
+
+			if (wishlistBtn) {
+			    updateWishlistStar(item.itemID);
+
+			    wishlistBtn.addEventListener('click', function () {
+			        var isInWishlist = wishlistBtn.dataset.inWishlist === 'true';
+			        toggleWishlist(item.itemID, isInWishlist);
+			    });
+			}
         var contactSellerEl = document.getElementById('contactSeller');
         if (contactSellerEl) {
             contactSellerEl.addEventListener('click', function() {
