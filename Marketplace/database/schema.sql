@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Items (
     item_condition VARCHAR(32) NULL,
     photo_path VARCHAR(500) NULL,
     price DECIMAL(10, 2) NOT NULL,
-    status ENUM('AVAILABLE', 'SOLD', 'PENDING', 'WITHDRAWN') NOT NULL DEFAULT 'AVAILABLE';
+    status ENUM('AVAILABLE', 'SOLD', 'PENDING', 'WITHDRAWN') NOT NULL DEFAULT 'AVAILABLE',
     date_listed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_items_seller FOREIGN KEY (sellerID) REFERENCES Users(userID) ON DELETE CASCADE,
     CONSTRAINT fk_items_category FOREIGN KEY (categoryID) REFERENCES Categories(categoryID),
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS Messages (
     CONSTRAINT fk_messages_sender FOREIGN KEY (senderID) REFERENCES Users(userID) ON DELETE CASCADE,
     INDEX idx_messages_conversation (conversationID, timestamp)
 );
+
 CREATE TABLE IF NOT EXISTS Wishlist (
     wishlistID INT AUTO_INCREMENT PRIMARY KEY,
     userID INT NOT NULL,
@@ -71,8 +72,6 @@ CREATE TABLE IF NOT EXISTS Wishlist (
     INDEX idx_wishlist_user (userID),
     INDEX idx_wishlist_item (itemID)
 );
-
-USE usc_marketplace;
 
 INSERT IGNORE INTO Categories (categoryName, description) VALUES
 ('Textbooks', 'Books, course readers, and study materials'),
