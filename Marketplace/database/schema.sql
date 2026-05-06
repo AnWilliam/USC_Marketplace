@@ -60,3 +60,27 @@ CREATE TABLE IF NOT EXISTS Messages (
     CONSTRAINT fk_messages_sender FOREIGN KEY (senderID) REFERENCES Users(userID) ON DELETE CASCADE,
     INDEX idx_messages_conversation (conversationID, timestamp)
 );
+
+CREATE TABLE IF NOT EXISTS Wishlist (
+    wishlistID INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT NOT NULL,
+    itemID INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_wishlist_user FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE,
+    CONSTRAINT fk_wishlist_item FOREIGN KEY (itemID) REFERENCES Items(itemID) ON DELETE CASCADE,
+    CONSTRAINT uq_wishlist UNIQUE (userID, itemID),
+    INDEX idx_wishlist_user (userID),
+    INDEX idx_wishlist_item (itemID)
+);
+
+INSERT IGNORE INTO Categories (categoryName, description) VALUES
+('Textbooks', 'Books, course readers, and study materials'),
+('Electronics', 'Laptops, chargers, calculators, and accessories'),
+('Furniture', 'Dorm and apartment furniture'),
+('Clothing', 'Clothes, shoes, and USC gear'),
+('Other', 'Everything else'),
+('Accessories', 'Bags, jewelry, tech accessories'),
+('Sports', 'Athletic gear and equipment'),
+('Hobby', 'Games, crafts, and collectibles'),
+('School Supplies', 'Notebooks, pens, desk organizers'),
+('Entertainment', 'Movies, music, tickets, and media');
