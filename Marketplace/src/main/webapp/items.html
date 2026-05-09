@@ -14,7 +14,7 @@
             </a>
             <div class="market-nav-actions">
                 <a class="nav-muted nav-always" href="items.html">Browse</a>
-                <a class="nav-muted nav-user-only" href="conversations.html">Messages</a>
+                <a class="nav-muted nav-user-only" href="#" id="navMessagesBtn">Messages</a>
                 <a class="nav-muted nav-user-only" href="wishlist.html">Wishlist</a>
                 <a class="nav-muted nav-guest-only" href="login.html">Login</a>
                 <a class="nav-muted nav-guest-only" href="register.html">Register</a>
@@ -105,5 +105,60 @@
     <script src="js/api.js"></script>
     <script src="js/site-nav.js"></script>
     <script src="js/marketplace.js"></script>
+    <script>
+        // Robust chat popup loader and opener
+(function() {
+    // Attach click handler immediately
+    var navMessagesBtn = document.getElementById('navMessagesBtn');
+    var chatPopupLoaded = false;
+    var chatPopupLoading = false;
+    var openChatPopup = function() {
+        var chatPopup = document.getElementById('chatPopup');
+        if (chatPopup) {
+            chatPopup.classList.remove('closed');
+            if (typeof loadMessages === 'function') loadMessages();
+        }
+    };
+    var loadChatPopup = function(callback) {
+        if (chatPopupLoaded || chatPopupLoading) return;
+        chatPopupLoading = true;
+        fetch('chat-popup.html').then(function(resp) { return resp.text(); }).then(function(html) {
+            var temp = document.createElement('div');
+            temp.innerHTML = html;
+            document.body.appendChild(temp.firstElementChild); // chatPopup
+            document.body.appendChild(temp.querySelector('#chatPopupOpen'));
+            var script = document.createElement('script');
+            script.src = 'js/messages.js';
+            script.onload = function() {
+                chatPopupLoaded = true;
+                chatPopupLoading = false;
+                if (callback) callback();
+            };
+            document.body.appendChild(script);
+        });
+    };
+    if (navMessagesBtn) {
+        navMessagesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var chatPopup = document.getElementById('chatPopup');
+            if (chatPopup) {
+                openChatPopup();
+            } else {
+                loadChatPopup(openChatPopup);
+            }
+        });
+    }
+    // Also load chat popup on floating button click if needed
+    window.addEventListener('DOMContentLoaded', function() {
+        var chatPopupOpenBtn = document.getElementById('chatPopupOpen');
+        if (chatPopupOpenBtn) {
+            chatPopupOpenBtn.addEventListener('click', function() {
+                var chatPopup = document.getElementById('chatPopup');
+                if (!chatPopup) loadChatPopup(openChatPopup);
+            });
+        }
+    });
+})();
+    </script>
 </body>
 </html>
