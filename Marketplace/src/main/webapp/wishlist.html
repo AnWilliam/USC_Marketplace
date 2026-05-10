@@ -17,7 +17,7 @@
     </a>
     <div class="market-nav-actions">
         <a class="nav-muted nav-always" href="items.html">Browse</a>
-        <a class="nav-muted nav-user-only" href="#" id="navMessagesBtn">Messages</a>
+        <a class="nav-muted nav-user-only" href="conversations.html">Messages</a>
         <a class="nav-muted nav-user-only" href="wishlist.html">Wishlist</a>
         <a class="icon-profile nav-user-only" href="profile.html" title="Profile" aria-label="Profile">
                     <img id="navProfileThumb" src="images/icon-profile.svg" alt="" width="22" height="22" decoding="async">
@@ -36,60 +36,6 @@
 <script src="js/api.js"></script>
 <script src="js/site-nav.js"></script>
 <script src="js/wishlist.js"></script>
-<script>
-// Robust chat popup loader and opener for wishlist
-(function() {
-    var navMessagesBtn = document.getElementById('navMessagesBtn');
-    var chatPopupLoaded = false;
-    var chatPopupLoading = false;
-    var openChatPopup = function() {
-        var chatPopup = document.getElementById('chatPopup');
-        if (chatPopup) {
-            chatPopup.classList.remove('closed');
-            if (typeof loadPopupConversations === 'function') loadPopupConversations();
-            if (typeof loadPopupMessages === 'function') loadPopupMessages();
-        }
-    };
-    var loadChatPopup = function(callback) {
-        if (chatPopupLoaded || chatPopupLoading) return;
-        chatPopupLoading = true;
-        fetch('chat-popup.html').then(function(resp) { return resp.text(); }).then(function(html) {
-            var temp = document.createElement('div');
-            temp.innerHTML = html;
-            document.body.appendChild(temp.firstElementChild); // chatPopup
-            document.body.appendChild(temp.querySelector('#chatPopupOpen'));
-            var script = document.createElement('script');
-            script.src = 'js/messages.js';
-            script.onload = function() {
-                chatPopupLoaded = true;
-                chatPopupLoading = false;
-                if (callback) callback();
-            };
-            document.body.appendChild(script);
-        });
-    };
-    if (navMessagesBtn) {
-        navMessagesBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            var chatPopup = document.getElementById('chatPopup');
-            if (chatPopup) {
-                openChatPopup();
-            } else {
-                loadChatPopup(openChatPopup);
-            }
-        });
-    }
-    window.addEventListener('DOMContentLoaded', function() {
-        var chatPopupOpenBtn = document.getElementById('chatPopupOpen');
-        if (chatPopupOpenBtn) {
-            chatPopupOpenBtn.addEventListener('click', function() {
-                var chatPopup = document.getElementById('chatPopup');
-                if (!chatPopup) loadChatPopup(openChatPopup);
-            });
-        }
-    });
-})();
-</script>
 
 </body>
 </html>
