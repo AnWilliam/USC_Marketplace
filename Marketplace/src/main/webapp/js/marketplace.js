@@ -2,7 +2,7 @@
     var ITEM_IMAGE_PLACEHOLDER = 'images/usc-trojan-placeholder.svg';
 
     var CATEGORY_SIDEBAR_ORDER = [
-        'Clothing', 'Accessories', 'Electronics', 'Sports', 'Hobby', 'School Supplies', 'Entertainment'
+        'Clothing', 'Accessories', 'Electronics', 'Sports', 'Hobby', 'School Supplies', 'Entertainment', 'Furniture', 'Other', 'Textbooks'
     ];
 
     var SORT_OPTIONS = [
@@ -13,10 +13,15 @@
 
     var FILTER_TAGS = [
         { id: 'Clothing', kind: 'cat' },
+        { id: 'Accessories', kind: 'cat' },
         { id: 'Electronics', kind: 'cat' },
         { id: 'Sports', kind: 'cat' },
-        { id: 'Hobby', kind: 'cat' },
+        { id: 'Hobbies', kind: 'cat' },
         { id: 'School Supplies', kind: 'cat' },
+        { id: 'Entertainment', kind: 'cat' },
+        { id: 'Furniture', kind: 'cat' },
+        { id: 'Other', kind: 'cat' },
+        { id: 'Textbooks', kind: 'cat' },
         { id: 'under25', kind: 'cap', cap: 25 },
         { id: 'under50', kind: 'cap', cap: 50 },
         { id: 'under100', kind: 'cap', cap: 100 }
