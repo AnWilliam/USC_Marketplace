@@ -1,5 +1,127 @@
 var ITEM_IMAGE_PLACEHOLDER = 'images/usc-trojan-placeholder.svg';
 
+function isOwner(item) {
+    return currentUserID != null && Number(item.sellerID) === Number(currentUserID);
+}
+
+var allCategories = [];
+
+function loadCategories() {
+    return apiGet('categories').then(function(data) {
+        if (data.success && Array.isArray(data.data)) {
+            allCategories = data.data;
+        }
+    });
+}
+
+function renderCategorySelect(selectedID) {
+    return ''
+        + '<select class="owner-control" data-edit-field="categoryID">'
+        +   '<option value="">Select a category</option>'
+        +   allCategories.map(function(cat) {
+                return ''
+                    + '<option value="' + cat.categoryID + '"'
+                    + (String(cat.categoryID) === String(selectedID) ? ' selected' : '')
+                    + '>'
+                    + escapeHtml(cat.categoryName)
+                    + '</option>';
+            }).join('')
+        + '</select>';
+}
+
+function ownerEditableFields(item) {
+    return [
+        { key: 'title', label: 'Item Name', type: 'text', value: item.title || '' },
+        { key: 'price', label: 'Price', type: 'number', value: item.price != null ? item.price : '', step: '0.01' },
+        { key: 'categoryID', label: 'Category', type: 'select', value: item.categoryID != null ? String(item.categoryID) : '' },
+        { key: 'description', label: 'Description', type: 'textarea', value: item.description || '' },
+        { key: 'photo', label: 'Upload Photo', type: 'file' },
+        { key: 'itemCondition', label: 'Condition', type: 'radio', value: item.itemCondition || 'Fair' }
+    ];
+}
+function renderOwnerInput(field) {
+    var value = escapeHtml(String(field.value || ''));
+
+    if (field.type === 'textarea') {
+        return '<textarea class="owner-control" data-edit-field="' + field.key + '">' + value + '</textarea>';
+    }
+
+	if (field.type === 'select') {
+	    return renderCategorySelect(field.value);
+	}
+	
+    if (field.type === 'radio') {
+        var options = ['New', 'Like New', 'Good', 'Fair'];
+
+        return ''
+            + '<div class="condition-options" data-edit-field="' + field.key + '">'
+            + options.map(function(opt, i) {
+                var id = 'cond_' + i + '_' + field.key;
+                return ''
+                    + '<label class="condition-option" for="' + id + '">'
+                    +   '<input id="' + id + '" type="radio" name="' + field.key + '" value="' + opt + '"'
+                    +   (field.value === opt ? ' checked' : '') + '>'
+                    +   '<span>' + escapeHtml(opt) + '</span>'
+                    + '</label>';
+            }).join('')
+            + '</div>';
+    }
+
+    if (field.type === 'file') {
+        return '<input class="owner-control" type="file" data-edit-field="' + field.key + '" accept="image/*">';
+    }
+
+    var extra = field.type === 'number' ? ' step="' + (field.step || 'any') + '"' : '';
+    return '<input class="owner-control" type="' + field.type + '" data-edit-field="' + field.key + '" value="' + value + '"' + extra + '>';
+}
+function renderOwnerField(field) {
+    return ''
+        + '<div class="owner-field" style="display:none;">'
+        +   '<label>' + escapeHtml(field.label) + '</label>'
+        +   renderOwnerInput(field)
+        + '</div>';
+}
+
+function setOwnerEditMode(container, editing) {
+    container.dataset.editing = editing ? '1' : '0';
+
+    container.querySelectorAll('.owner-field').forEach(function(el) {
+        el.style.display = editing ? '' : 'none';
+    });
+
+    var btn = container.querySelector('#toggleEditListing');
+    if (btn) btn.textContent = editing ? 'Save changes' : 'Edit listing';
+}
+function saveOwnerListing(item, container) {
+    var fd = new FormData();
+    fd.append('action', 'updateItem');
+    fd.append('itemID', String(item.itemID));
+
+    ownerEditableFields(item).forEach(function(field) {
+        if (field.type === 'file') return;
+
+        var el = container.querySelector('[data-edit-field="' + field.key + '"]');
+        if (!el) return;
+
+        if (field.type === 'radio') {
+            var checked = container.querySelector('input[name="itemCondition"]:checked');
+            if (checked) fd.append('itemCondition', checked.value);
+            return;
+        }
+
+        fd.append(field.key, el.value);
+    });
+
+    var photoInput = container.querySelector('input[type="file"][data-edit-field="photo"]');
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+        fd.append('photo', photoInput.files[0]);
+    }
+
+    return apiPost('items', fd).then(function(data) {
+        showResult(data.message, !data.success);
+        return data;
+    });
+}
 function toggleWishlist(itemID, isInWishlist) {
     if (currentUserID == null) {
         window.location.href = loginUrlWithNext();
@@ -177,15 +299,24 @@ function loadItemDetail() {
             notice = '<p class="item-unavailable-notice">This listing is no longer available (status: ' + escapeHtml(item.status) + ').</p>';
         }
 
-        var ownerBar = '';
-        if (currentUserID != null && Number(item.sellerID) === Number(currentUserID) && item.status === 'AVAILABLE') {
-            ownerBar = ''
-                + '<div class="item-detail-owner-actions">'
-                + '<button type="button" id="detailMarkSold" class="button">Mark sold</button>'
-                + '<button type="button" id="detailRemoveListing" class="button btn-remove-detail">&times;</button>'
-                + '</div>';
-        }
+		var statusHtml = ''
+		    + '<div class="item-status-block">'
+		    +   '<label>Status</label>'
+		    +   '<p class="owner-status">' + escapeHtml(item.status) + '</p>'
+		    + '</div>';
 
+		var ownerEditorHtml = '';
+		if (isOwner(item)) {
+		    var fieldsHtml = ownerEditableFields(item).map(renderOwnerField).join('');
+
+		    ownerEditorHtml = ''
+		        + '<section id="ownerListingEditor" class="item-detail-owner-editor" data-editing="0">'
+		        +   '<div class="item-detail-owner-actions">'
+		        +     '<button type="button" id="toggleEditListing" class="button">Edit listing</button>'
+		        +   '</div>'
+		        +   fieldsHtml
+		        + '</section>';
+		}
         var contactBtn = '';
         if (item.status === 'AVAILABLE' && currentUserID != null && Number(item.sellerID) !== Number(currentUserID)) {
             contactBtn = '<button type="button" id="contactSeller" class="button primary">Contact seller</button>';
@@ -196,16 +327,73 @@ function loadItemDetail() {
             wishlistBtnHtml = '<button type="button" id="wishlistToggle" class="button"></button>';
         }
 
-        itemDetail.innerHTML = ''
-            + '<figure class="' + heroFigureClass + '"><img src="' + escapeHtml(hero) + '" alt=""></figure>'
-            + notice
-            + '<h1>' + escapeHtml(item.title) + '</h1>'
-            + wishlistBtnHtml
-            + '<p class="price">' + money(item.price) + '</p>'
-            + '<p>' + escapeHtml(item.description || '') + '</p>'
-            + '<p>Status: ' + escapeHtml(item.status) + '</p>'
-            + ownerBar
-            + contactBtn;
+        var ownerBar = '';
+        if (currentUserID != null && Number(item.sellerID) === Number(currentUserID) && item.status === 'AVAILABLE') {
+            ownerBar = ''
+                + '<div class="item-detail-owner-actions">'
+                + '<button type="button" id="detailMarkSold" class="button">Mark sold</button>'
+                + '<button type="button" id="detailRemoveListing" class="button btn-remove-detail">&times;</button>'
+                + '</div>';
+        }
+		var summaryHtml = ''
+		    + '<div class="item-detail-summary">'
+		    +   '<h1>' + escapeHtml(item.title) + '</h1>'
+		    +   '<p class="price">' + money(item.price) + '</p>'
+		    +   '<p><strong>Category:</strong> ' + escapeHtml(item.categoryName || '') + '</p>'
+		    +   '<p><strong>Condition:</strong> ' + escapeHtml(item.itemCondition || '') + '</p>'
+		    +   '<p><strong>Description:</strong> ' + escapeHtml(item.description || '') + '</p>'
+		    +   '<p><strong>Status:</strong> ' + escapeHtml(item.status) + '</p>'
+		    + '</div>';
+
+			itemDetail.innerHTML = ''
+			    + '<div class="item-detail-layout">'
+			    +   '<figure class="' + heroFigureClass + '">'
+			    +     '<img src="' + escapeHtml(hero) + '" alt="">'
+			    +   '</figure>'
+			    +   '<div class="item-detail-right">'
+			    +     summaryHtml
+			    +     wishlistBtnHtml
+			    +     contactBtn
+			    +     ownerEditorHtml
+			    +     ownerBar
+			    +   '</div>'
+			    + '</div>';
+				
+				
+        // Owner edit/save toggle
+        var editor = document.getElementById('ownerListingEditor');
+        var toggleEditBtn = document.getElementById('toggleEditListing');
+
+        if (editor && toggleEditBtn) {
+            setOwnerEditMode(editor, false);
+            toggleEditBtn.addEventListener('click', function() {
+                var editing = editor.dataset.editing === '1';
+
+                // first click => enter edit mode
+                if (!editing) {
+                    setOwnerEditMode(editor, true);
+                    return;
+                }
+
+                // second click => save
+                toggleEditBtn.disabled = true;
+
+                saveOwnerListing(item, editor).then(function(result) {
+					if (result.success) {
+					    // update top display
+					    item.title = editor.querySelector('[data-edit-field="title"]').value;
+					    item.price = editor.querySelector('[data-edit-field="price"]').value;
+					    item.description = editor.querySelector('[data-edit-field="description"]').value;
+
+					    loadItemDetail(); // easiest refresh
+					} else {
+                       setOwnerEditMode(editor, true);
+                    }
+                }).finally(function() {
+                    toggleEditBtn.disabled = false;
+                });
+            });
+        }
 
         var wishlistBtnEl = document.getElementById('wishlistToggle');
 
@@ -304,6 +492,8 @@ if (searchForm) {
 }
 
 refreshSessionUser().then(function() {
-    loadItems();
-    loadItemDetail();
+    loadCategories().then(function() {
+        loadItems();
+        loadItemDetail();
+    });
 });

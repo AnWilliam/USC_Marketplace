@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 import model.Item;
 import util.DBUtil;
@@ -196,6 +197,43 @@ public class ItemDAO {
             stmt.setString(1, photoPath);
             stmt.setInt(2, itemID);
             stmt.setInt(3, sellerID);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public boolean updateItem(
+            int itemID,
+            int sellerID,
+            String title,
+            String description,
+            BigDecimal price,
+            Integer categoryID,
+            String itemCondition) throws SQLException {
+
+        String sql = "UPDATE Items SET title = ?, description = ?, price = ?, categoryID = ?, item_condition = ? "
+                   + "WHERE itemID = ? AND sellerID = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, title);
+            stmt.setString(2, description);
+            stmt.setBigDecimal(3, price);
+
+            if (categoryID == null) {
+                stmt.setNull(4, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(4, categoryID);
+            }
+
+            if (itemCondition == null || itemCondition.trim().isEmpty()) {
+                stmt.setNull(5, java.sql.Types.VARCHAR);
+            } else {
+                stmt.setString(5, itemCondition.trim());
+            }
+
+            stmt.setInt(6, itemID);
+            stmt.setInt(7, sellerID);
+
             return stmt.executeUpdate() > 0;
         }
     }
