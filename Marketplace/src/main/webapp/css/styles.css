@@ -108,8 +108,8 @@ nav a:hover, .quick-grid a:hover {
 
 .quick-grid, .item-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
 }
 
 .quick-grid a, .item-card, .panel, .list-panel, .message-list {
@@ -511,6 +511,10 @@ input, select, textarea {
 .item-detail-summary .price {
     margin: 12px 0 20px;
 }
+.page-shell{
+	margin: 0.5rm auto;
+}
+
 
 @media (max-width: 900px) {
     .item-detail-layout {
