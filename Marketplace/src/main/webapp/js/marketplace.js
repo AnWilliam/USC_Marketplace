@@ -16,7 +16,7 @@
         { id: 'Accessories', kind: 'cat' },
         { id: 'Electronics', kind: 'cat' },
         { id: 'Sports', kind: 'cat' },
-        { id: 'Hobbies', kind: 'cat' },
+        { id: 'Hobby', kind: 'cat' },
         { id: 'School Supplies', kind: 'cat' },
         { id: 'Entertainment', kind: 'cat' },
         { id: 'Furniture', kind: 'cat' },
