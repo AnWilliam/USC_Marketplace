@@ -21,6 +21,46 @@ public class ItemService {
         this.itemDAO = itemDAO;
         this.categoryDAO = categoryDAO;
     }
+    
+    public void updateItem(
+            int itemID,
+            int sellerID,
+            String title,
+            String description,
+            BigDecimal price,
+            Integer categoryID,
+            String itemCondition) throws SQLException {
+
+        Item existing = itemDAO.findById(itemID);
+        if (existing == null) {
+            throw new IllegalArgumentException("Item not found.");
+        }
+        if (existing.getSellerID() != sellerID) {
+            throw new IllegalArgumentException("You are not the seller of this item.");
+        }
+
+        if (ValidationUtil.isBlank(title)) {
+            throw new IllegalArgumentException("Title is required.");
+        }
+        if (!ValidationUtil.isValidPrice(price)) {
+            throw new IllegalArgumentException("Price must be greater than 0.");
+        }
+
+        // If categoryID is editable, validate it.
+        if (categoryID != null && categoryDAO.findById(categoryID) == null) {
+            throw new IllegalArgumentException("Category does not exist.");
+        }
+
+        itemDAO.updateItem(
+            itemID,
+            sellerID,
+            title.trim(),
+            description,
+            price,
+            categoryID,
+            itemCondition
+        );
+    }
 
     public Item createItem(int sellerID, int categoryID, String title, String description, BigDecimal price, String itemCondition) throws SQLException {
         if (ValidationUtil.isBlank(title)) {

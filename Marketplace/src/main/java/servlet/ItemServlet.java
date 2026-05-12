@@ -65,6 +65,7 @@ public class ItemServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("action");
+
             if ("updateStatus".equals(action)) {
                 int itemID = Integer.parseInt(request.getParameter("itemID"));
                 String status = request.getParameter("status");
@@ -73,6 +74,40 @@ public class ItemServlet extends HttpServlet {
                 return;
             }
 
+            
+            if ("updateItem".equals(action)) {
+                int itemID = Integer.parseInt(request.getParameter("itemID"));
+                String title = request.getParameter("title");
+                String description = request.getParameter("description");
+                String itemCondition = request.getParameter("itemCondition");
+
+                String priceStr = request.getParameter("price");
+                BigDecimal price = new BigDecimal(priceStr);
+
+                String categoryIDStr = request.getParameter("categoryID");
+                int categoryID = Integer.parseInt(categoryIDStr);
+
+                itemService.updateItem(
+                    itemID,
+                    userID,
+                    title,
+                    description,
+                    price,
+                    categoryID,
+                    itemCondition
+                );
+
+                Part photoPart = request.getPart("photo");
+                if (photoPart != null && photoPart.getSize() > 0) {
+                    String savedRelative = saveItemPhoto(request, itemID, photoPart);
+                    itemService.updateItemPhoto(itemID, userID, savedRelative);
+                }
+
+                JsonUtil.writeSuccess(response, "Item updated.");
+                return;
+            }
+
+            // existing create-item flow
             int categoryID = Integer.parseInt(request.getParameter("categoryID"));
             String title = request.getParameter("title");
             String description = request.getParameter("description");
